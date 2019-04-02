@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="4d6845a4-348a-4427-8475-76c3bf106459" name="默认更改列表" comment="" />
+    <list default="true" id="4d6845a4-348a-4427-8475-76c3bf106459" name="默认更改列表" comment="start_0.0">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -20,23 +22,7 @@
     <option name="HIDDEN_KINDS">
       <set />
     </option>
-    <expand>
-      <path>
-        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
-        <item name="blog@localhost" type="feb32156:DbDataSourceImpl" />
-      </path>
-      <path>
-        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
-        <item name="blog@localhost" type="feb32156:DbDataSourceImpl" />
-        <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
-      </path>
-      <path>
-        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
-        <item name="blog@localhost" type="feb32156:DbDataSourceImpl" />
-        <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
-        <item name="blog: schema" type="c314c289:MysqlImplModel$Schema" />
-      </path>
-    </expand>
+    <expand />
     <select />
   </component>
   <component name="DjangoConsoleOptions" custom-start-script="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)">
@@ -47,7 +33,7 @@
       <file leaf-file-name="settings.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/blog/settings.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="675">
+            <state relative-caret-position="2278">
               <caret line="134" selection-start-line="134" selection-end-line="134" />
             </state>
           </provider>
@@ -72,6 +58,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="PREVIOUS_COMMIT_AUTHORS">
+      <list>
+        <option value="wangwang &lt;guohua.wang@live.com&gt;" />
+      </list>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="IdeDocumentHistory">
@@ -207,6 +198,14 @@
       <option name="presentableId" value="Default" />
       <updated>1554125053655</updated>
     </task>
+    <task id="LOCAL-00001" summary="start_0.0">
+      <created>1554181986535</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1554181986535</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TodoView">
@@ -222,29 +221,29 @@
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
+      <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" visible="true" weight="0.3292683" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Run" order="2" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Python Console" order="7" weight="0.3292683" />
       <window_info anchor="bottom" id="Terminal" order="7" weight="0.32815966" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.23819743" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2414163" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
-      <window_info active="true" anchor="right" id="Database" order="3" visible="true" weight="0.222103" />
-      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="right" id="Database" order="3" visible="true" weight="0.222103" />
       <window_info anchor="right" id="SciView" order="3" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="bottom" id="调试" order="7" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info active="true" anchor="bottom" id="Database Console" order="8" visible="true" weight="0.32815966" />
       <window_info anchor="bottom" id="manage.py@blog" order="8" weight="0.29600886" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="调试" order="7" />
+      <window_info active="true" anchor="bottom" id="Database Console" order="8" visible="true" weight="0.32815966" />
+      <window_info anchor="bottom" id="Find" order="1" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -253,7 +252,25 @@
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="start_0.0" />
+    <option name="LAST_COMMIT_MESSAGE" value="start_0.0" />
+  </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/blog/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2278">
+          <caret line="134" selection-start-line="134" selection-end-line="134" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/bottom.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="1" column="24" selection-start-line="1" selection-start-column="24" selection-end-line="1" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/blog/settings.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2278">
@@ -268,20 +285,8 @@
         </state>
       </provider>
     </entry>
-    <entry file="das://128374cb-a0af-425f-9448-9b7dcc0308c3/schema/blog/table/database_account_friend">
-      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="das://128374cb-a0af-425f-9448-9b7dcc0308c3/schema/blog/table/database_account">
-      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="das://128374cb-a0af-425f-9448-9b7dcc0308c3/schema/blog/table/database_account_friend" />
+    <entry file="das://128374cb-a0af-425f-9448-9b7dcc0308c3/schema/blog/table/database_account" />
     <entry file="file://$PROJECT_DIR$/blog/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="17">
@@ -317,35 +322,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="das://128374cb-a0af-425f-9448-9b7dcc0308c3/schema/blog/table/account_account">
-      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="das://128374cb-a0af-425f-9448-9b7dcc0308c3/schema/blog/table/account_account" />
     <entry file="file://$PROJECT_DIR$/blog/models.py" />
-    <entry file="das://128374cb-a0af-425f-9448-9b7dcc0308c3/schema/blog/table/database_category">
-      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="das://128374cb-a0af-425f-9448-9b7dcc0308c3/schema/blog/table/database_comment">
-      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="das://128374cb-a0af-425f-9448-9b7dcc0308c3/schema/blog/table/database_article_category">
-      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="das://128374cb-a0af-425f-9448-9b7dcc0308c3/schema/blog/table/database_category" />
+    <entry file="das://128374cb-a0af-425f-9448-9b7dcc0308c3/schema/blog/table/database_comment" />
+    <entry file="das://128374cb-a0af-425f-9448-9b7dcc0308c3/schema/blog/table/database_article_category" />
     <entry file="file://$PROJECT_DIR$/account/models.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="51">
@@ -353,13 +334,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="das://128374cb-a0af-425f-9448-9b7dcc0308c3/schema/blog/table/database_article">
-      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="das://128374cb-a0af-425f-9448-9b7dcc0308c3/schema/blog/table/database_article" />
     <entry file="file://$PROJECT_DIR$/database/models.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="374">
@@ -367,23 +342,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="das://128374cb-a0af-425f-9448-9b7dcc0308c3/schema/blog/table/database_account_friend">
-      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="das://128374cb-a0af-425f-9448-9b7dcc0308c3/schema/blog/table/database_account">
-      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="das://128374cb-a0af-425f-9448-9b7dcc0308c3/schema/blog/table/database_account_friend" />
+    <entry file="das://128374cb-a0af-425f-9448-9b7dcc0308c3/schema/blog/table/database_account" />
     <entry file="file://$PROJECT_DIR$/blog/settings.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="675">
+        <state relative-caret-position="2278">
           <caret line="134" selection-start-line="134" selection-end-line="134" />
         </state>
       </provider>
