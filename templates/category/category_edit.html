@@ -1,0 +1,37 @@
+{# <!DOCTYPE html> #}
+<meta http-equiv='Content-type' content='text/htm'>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="/static/jquery-3.3.1.js"></script>
+    <style>
+        body, h1, h2, h3, h4, h5, h6, p, ul, ol {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+    </style>
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css/">
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap-theme.css">
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap-theme.min.css">
+</head>
+<body>
+<div style="overflow: auto;width: 1000px;clear: both;margin: 0 auto;">
+    {% include 'base/private_top.html'  %}
+    <div>
+    {% include 'base/private_cebianlan.html' %}
+
+    <form action="/category/category_edit" method="post" enctype="multipart/form-data">
+        <p><input type="hidden" name="id" value="{{ category_obj.id }}"></p>
+        <p>请输入新的标签名称</p>
+        <p><input type="text" name="category_description" value={{ category_obj.description }}></p>
+        <p><input type="submit" value="确认修改"></p>
+    </form>
+    </div>
+
+    {% include 'base/foot.html'  %}
+    </div>
+</body>
+</html>

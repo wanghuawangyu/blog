@@ -1,0 +1,46 @@
+{# <!DOCTYPE html> #}
+<meta http-equiv='Content-type' content='text/htm'>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>caterory_list</title>
+    <script src="/static/jquery-3.3.1.js"></script>
+
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css/">
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap-theme.css">
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap-theme.min.css">
+</head>
+<body>
+<div style="overflow: auto;width: 1000px;clear: both;margin: 0 auto;">
+{% include 'base/private_top.html'  %}
+
+<div style="position: relative;overflow:hidden;">
+    {% include 'base/private_cebianlan.html' %}
+    <table style="position: absolute;left: 210px;">
+        <thead>
+            <tr>
+                <td>博客分类</td>
+                <td>博客数</td>
+                <td colspan="2">操作</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for category in categorys %}
+                <tr>
+                    <td>{{forloop.counter}}</td>
+                    <td>{{category.description}}</td>
+                    <td><a href="/category/category_edit?id={{ category.id }}">修改</a></td>
+                    <td><a href="/category/category_dele?id={{ category.id }}">删除</td>
+
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% include 'base/foot.html'  %}
+
+</div>
+</body>
+</html>
