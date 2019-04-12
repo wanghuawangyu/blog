@@ -15,13 +15,16 @@ class Account(models.Model):
     blog_num=models.SmallIntegerField(default=0) #发表博客数
     friend=models.ManyToManyField(to="Account") #关联好友
 
-    def __str__(self):
-        return '姓名:{},邮箱:{},爱好:{},博客数量:{}'.format(self.name,self.email,self.hobby,self.blog_num)
+    # def __str__(self):
+    #     return '姓名:{},邮箱:{},爱好:{},博客数量:{}'.format(self.name,self.email,self.hobby,self.blog_num)
 
 # 分类/标签数据库
 class Category(models.Model):
     id=models.AutoField(primary_key=True) #分类id
-    description=models.CharField(max_length=128,unique=True,null=False,db_index=True) #标签描述
+    name=models.CharField(max_length=128,null=True,db_index=True) #标签名称
+    orderNo=models.IntegerField(default=1) #标签顺序
+    description=models.CharField(max_length=128,null=True) #标签描述
+    account = models.ForeignKey(to="Account",null=True)  # 标签作者
 
 
 # 文章数据库

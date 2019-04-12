@@ -6,7 +6,7 @@
     <div class="dropdown" style="position: absolute;top: 0;right:0;">
 
             <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                用户昵称
+                {{request.COOKIES.uname}}
                 <span class="caret" ></span>
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" style="position: absolute;z-index: 1;">
@@ -21,10 +21,10 @@
             $('#dropdownMenu1').click(function () {
                 $(this).next("ul").css("display", 'block').css("z-index","1000");
             });
-             $('#dropdownMenu1~ul').mouseover(function () {
+             $('#dropdownMenu1+ul').mouseover(function () {
                 $(this).css("display",'block').css("z-index","1000");
             });
-             $('#dropdownMenu1~ul').mouseout(function () {
+             $('#dropdownMenu1+ul').mouseout(function () {
                 $(this).css("display",'none');
              });
         </script>
