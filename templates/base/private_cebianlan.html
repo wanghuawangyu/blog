@@ -1,4 +1,4 @@
-<div class="list-group" style="width:200px;float:left;z-index:-1;margin-right: 10px">
+<div class="list-group" style="width:200px;float: left;margin-right: 10px">
 
   <a href="/account" class="list-group-item {% if request.path_info == '/account' %}active{% endif %}">个人设置</a>
   <a href="/account/profile" class="list-group-item {% if request.path_info == '/account/profile' %}active{% endif %}">&nbsp;&nbsp;&nbsp;信息维护</a>
@@ -8,11 +8,15 @@
   <a href='/friend/friend_add' class="list-group-item {% if request.path_info == '/friend/friend_add' %}active{% endif %}">&nbsp;&nbsp;&nbsp;添加好友</a>
   <a href='/friend/friend_apply' class="list-group-item {% if request.path_info == '/friend/friend_apply' %}active{% endif %}">&nbsp;&nbsp;&nbsp;好友申请</a>
   <a href="/article" class="list-group-item {% if request.path_info == '/article' %}active{% endif %}">文章管理</a>
-  <a href="/article/article_list?category=all" class="list-group-item {% if request.path_info == '/article/article_list' and request.GET.category == 'all' %}active{% endif %}">&nbsp;&nbsp;&nbsp;所有文章</a>
+  <a href="/article/article_list?category=all" class="list-group-item {% if request.path_info == '/article/article_list' and request.GET.category == 'all' %}active{% endif %}">&nbsp;&nbsp;&nbsp;所有文章<span class="badge">{{artical_counts.0}}</span></a>
     {% for foo in category_objs %}
-        <a href="/article/article_list?category={{ foo.id }}" class="list-group-item {% if request.path_info == '/article/article_list'  and request.GET.category == foo.id %}active{% endif %}">&nbsp;&nbsp;&nbsp;{{foo.description}}</a>
+        {% for artical_count in artical_counts.1 %}
+            {% if forloop.parentloop.counter == forloop.counter %}
+                <a href="/article/article_list?category={{ foo.id }}" class="list-group-item {% if request.path_info == '/article/article_list'  and request.GET.category == foo.id %}active{% endif %}">&nbsp;&nbsp;&nbsp;{{foo.name}}<span class="badge">{{artical_count}}</span></a>
+            {% endif %}
+        {% endfor %}
     {% endfor %}
-  <a href="/article/article_list?category=draft" class="list-group-item {% if request.path_info == '/article/article' and request.GET.category == 'draft' %}active{% endif %}">&nbsp;&nbsp;&nbsp;草稿</a>
+  <a href="/article/article_list?category=draft" class="list-group-item {% if request.path_info == '/article/article' and request.GET.category == 'draft' %}active{% endif %}">&nbsp;&nbsp;&nbsp;草稿<span class="badge">{{artical_counts.2}}</span></a>
 
   <a href="/category/category_list" class="list-group-item {% if request.path_info == '/category' %}active{% endif %}">分组管理</a>
   <a href="/category/category_list" class="list-group-item {% if request.path_info == '/category/category_list' %}active{% endif %}">&nbsp;&nbsp;&nbsp;所有分组</a>

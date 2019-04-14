@@ -20,8 +20,10 @@ import sys
 sys.path.append('..')
 from friend import urls as friend_urls
 from category import urls as category_urls
+from article import urls as article_urls
 urlpatterns = [
     # url(r'^admin/', admin.site.urls),
     url(r'^category',include(category_urls)),
     url(r'^friend',include(friend_urls)),
+    url(r'^article',include(article_urls)),
 ]

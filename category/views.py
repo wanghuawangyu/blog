@@ -6,85 +6,48 @@ from django.shortcuts import render,redirect,HttpResponse
 # Create your views here.
 
 from database import models
+from functools import wraps
+from public_function_blog import *
+
+def login_check(func):
+    @wraps(func)
+    def inner(request,*args,**kwargs):
+        uid=request.COOKIES.get('uid')
+        uname=request.COOKIES.get('uname')
+        isLogin=request.COOKIES.get('isLogin')
+        if isLogin == "True":
+            print(uid, uname, isLogin, '***' * 100)
+            if models.Account.objects.filter(id=uid).exists():
+                account_obj=models.Account.objects.get(id=uid)
+            else:
+                return render(request,'account/login.html')
+
+            if account_obj.name==uname:
+                return func(request)
+            else:
+                return render(request,'account/login.html')
+        else:
+            return render(request,'account/login.html')
+    return inner
 
 
 
-
+@login_check
 def category_list(request):
 
     # 数据库查询
     uid=request.COOKIES.get('uid','')
     print('uid',uid)
-    category_objs = models.Category.objects.filter(account_id=uid).order_by("orderNo")
+    category_objs = models.Category.objects.filter(account_id=uid).order_by("orderNo") #给侧边栏和网页主体用
 
     print(category_objs)
     print(request.path_info)
 
-    # 分页处理 开始
-    page_num=request.GET.get('page','1')
-    page_num = int(page_num)
-    if page_num<=0:
-        page_num=1
-    print(page_num)
+    # 分页处理
+    page_html,category_objs_slice=page_html_create(request,category_objs,10,10)
 
-    # 每一页显示多少数据
-    per_page=10
-
-    # 总页码数
-    total_count=category_objs.count()
-    totol_page,m=divmod(total_count,per_page)
-    totol_page=totol_page if m==0 else totol_page+1
-
-    print(total_count, totol_page, m, '+' * 100)
-    # 页面上总共展示多少页码
-    max_page=11
-    half_max_page=max_page//2
-
-    prev_page=page_num-1 if page_num>=2 else page_num
-    next_page=page_num+1 if page_num<totol_page else totol_page
-
-    page_start=page_num-half_max_page
-    if page_start<=1:
-        page_start=1
-
-    page_end = page_num + half_max_page
-    if page_end>=totol_page:
-        page_end=totol_page
-
-    if page_num<=half_max_page:
-        page_start=1
-        # page_end=max_page
-
-    if page_num >=totol_page-half_max_page:
-        # page_start = totol_page-max_page+1
-        page_end=totol_page
-    if page_start==page_end:
-        page_end +=1
-    print(page_start,page_end,'*'*100)
-    # 自己拼接一个分页html代码
-    html_str_list=[]
-    # 首页
-    html_str_list.append('<li><a href="/category/category_list/?page=1">首页</a></li>')
-    # 上一页
-    html_str_list.append('<li><a href="/category/category_list/?page={}" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>'.format(prev_page))
-    for i in range(page_start,page_end):
-        tmp='<li><a href="/category/category_list/?page={0}">{0}</a></li>'.format(i)
-        html_str_list.append(tmp)
-    # 下一页
-    html_str_list.append('<li><a href="/category/category_list/?page={}" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>'.format(next_page))
-    # 尾页
-    html_str_list.append('<li><a href="/category/category_list/?page={}">尾页</a></li>'.format(totol_page))
-    page_html=''.join(html_str_list)
-
-    category_objs_slice=category_objs[(page_num-1)*10:page_num*10]
-
-    # 分页处理 结束--------------------------------
-
-    artical_counts = []
-    for category in category_objs:
-        artical_count=category.article_set.filter(account_id=uid).count()
-        artical_counts.append(artical_count)
-
+    # 获取分组对应文章数量
+    artical_counts = article_counts_category(request)
 
     return render(request,"category/category_list.html",{"category_objs":category_objs,
                                                          "category_objs_slice": category_objs_slice,
@@ -92,20 +55,36 @@ def category_list(request):
                                                          'artical_counts':artical_counts,
                                                          'page_html': page_html
                                                          })
-
+@login_check
 def category_edit(request):
     uid=request.COOKIES.get('uid','')
+    category_objs = models.Category.objects.filter(account_id=uid)
+
     if request.method=='GET':
-        category_objs = models.Category.objects.filter(account_id=uid)
+        # 获取分组对应文章数量
+        artical_counts = article_counts_category(request)
+
         category_edit_id=request.GET.get('category_id')
         category_edit_obj=models.Category.objects.get(account_id=uid,id=category_edit_id)
         return render(request,'category/category_edit.html',{ "category_objs":category_objs,
                                                               "category_edit_obj":category_edit_obj,
-                                                              'request':request
+                                                              'request':request,
+                                                              'artical_counts': artical_counts,
                                                             })
     if request.method=='POST':
         category_edit_id=request.POST.get('category_id')
+        category_edit_obj = models.Category.objects.get(account_id=uid, id=category_edit_id)
         new_category_name=request.POST.get('category_name')
+        if new_category_name=='草稿' or new_category_name=='所有文章':
+            errorstr='标签名称不可用'
+            # 获取分组对应文章数量
+            artical_counts = article_counts_category(request)
+            return render(request, 'category/category_edit.html', {"category_objs": category_objs,
+                                                                   "category_edit_obj": category_edit_obj,
+                                                                   'request': request,
+                                                                   "errorstr":errorstr,
+                                                                   'artical_counts': artical_counts,
+                                                                   })
         new_category_description=request.POST.get('category_description')
         new_category_orderNo=request.POST.get('category_orderNo')
         # print(new_category_name,new_category_description,new_category_orderNo)
@@ -118,17 +97,30 @@ def category_edit(request):
         category_obj.save()
         return redirect('/category/category_list/')
 
+@login_check
 def category_add(request):
     uid = request.COOKIES.get('uid', '')
+    category_objs = models.Category.objects.filter(account_id=uid)
+
+    # 获取分组对应文章数量
+    artical_counts = article_counts_category(request)
+    print(category_objs)
     if request.method=='GET':
-        category_objs = models.Category.objects.filter(account_id=uid)
         return render(request,'category/category_add.html',{"category_objs":category_objs,
-                                                            'request': request})
+                                                            'request': request,
+                                                            'artical_counts': artical_counts,
+                                                            })
     if request.method == 'POST':
         add_category_name=request.POST.get('category_name')
         add_category_description=request.POST.get('category_description')
         add_category_orderNo=request.POST.get('category_orderNo')
-
+        if add_category_name=='草稿' or add_category_name=='所有文章':
+            errorstr='标签名称不可用'
+            return render(request,'category/category_add.html',{"category_objs":category_objs,
+                                                                'request': request,
+                                                                "errorstr": errorstr,
+                                                                'artical_counts': artical_counts,
+                                                                })
         category_obj=models.Category(name=add_category_name,
                                      description=add_category_description,
                                      orderNo=add_category_orderNo
@@ -137,7 +129,8 @@ def category_add(request):
         models.Category.objects.bulk_create([category_obj], 1)
         return redirect('/category/category_list/')
 
-def category_dele(request):
+@login_check
+def category_delete(request):
     uid = request.COOKIES.get('uid', '')
     dele_id=request.GET.get("category_id")
     category_obj = models.Category.objects.get(id=dele_id,account_id=uid)

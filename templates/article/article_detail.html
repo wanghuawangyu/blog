@@ -1,0 +1,197 @@
+{# <!DOCTYPE html> #}
+<meta http-equiv='Content-type' content='text/htm'>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+{% include 'base/head.html' %}
+
+</head>
+<body>
+<div style="width: 1000px;margin: 0 auto">
+    {# 顶部 #}
+    <div style="height:50px;position: relative">
+    {#  顶部：左侧logo  #}
+        <div style="background:transparent url('/static/jpg/logo.png') no-repeat center center;background-size:100px;width: 100px;height:40px;"></div>
+
+    {#  顶部：右侧下拉导航  #}
+        <div class="dropdown" style="position: absolute;top: 0;right:0;">
+
+                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    {{request.COOKIES.uname}}
+                    <span class="caret" ></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" style="position: absolute;z-index: 1;">
+                    <li><a href="/account">个人设置</a></li>
+                    <li><a href="/friend">好友管理</a></li>
+                    <li><a href="/article">文章管理</a></li>
+                    <li><a href="/category">分组管理</a></li>
+                    <li><a href="/comment">评论管理</a></li>
+                </ul>
+                <button class="btn btn-default">退出登陆</button>
+            <script>
+                $('#dropdownMenu1').click(function () {
+                    $(this).next("ul").css("display", 'block').css("z-index","1000");
+                });
+                 $('#dropdownMenu1+ul').mouseover(function () {
+                    $(this).css("display",'block').css("z-index","1000");
+                });
+                 $('#dropdownMenu1+ul').mouseout(function () {
+                    $(this).css("display",'none');
+                 });
+            </script>
+        </div>
+    </div>
+
+    {# 中部 #}
+    <div style="position: relative;">
+        {#侧边广告栏#}
+        <div class="list-group" style="width:200px;height:500px;float: left;margin-right: 10px;background: gainsboro;">
+            <address>
+                <h3 style="text-align: center">广告位招商</h3>
+                <strong>桃花岛 Inc.</strong><br>
+                浙江府 绍兴城 东海出海100海里<br>
+                东邪黄药师故居
+                桃花岛总部<br>
+                大中华共和国
+                <br>
+                <abbr title="Phone">P:</abbr> (086) 8888-88888
+            </address>
+
+            <address>
+                <strong>小东邪:汪国华</strong><br>
+                <a href="mailto:#">taohuadao_ceo@thd.com</a>
+            </address>
+
+        </div>
+
+        {#正文#}
+        <div style="width: 790px;float:right;">
+            <div style="margin: 0 auto;width: 690px;">
+                {# 标题 #}
+                <div>
+                    <h1 style="text-align: center">{{ article_obj.title }}</h1>
+                </div>
+                {# 如果文章作者浏览本人文章，则加上编辑和删除的操作 #}
+                <div style="margin: 5px;">
+                    {% if article_obj.account_id|make_list|join:'' == request.COOKIES.uid %}
+                        <div style="float:right;margin-left: 5px;">
+                            <button type="button" class="btn btn-danger" onclick="location.href='/article/article_delete?article_id={{ article_obj.id }}'">删除文章</button>
+                        </div>
+                        <div style="float:right">
+                            <button type="button" class="btn btn-warning" onclick="location.href='/article/article_edit?article_id={{ article_obj.id }}'">修改文章</button>
+                        </div>
+                    {% endif %}
+
+                </div>
+                {# 文章信息 #}
+                <div style="clear: both;padding: 0px;line-height:30px;">
+                    <p style="text-align: center">
+                        <span>发表时间:{{ article_obj.create_date|date:'Y-m-d' }}</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <span>浏览量:{{ article_obj.read_num }}</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <span>评论数:{{ article_obj.comment_num }}</span>
+                         &nbsp;&nbsp;&nbsp;&nbsp;
+                        <span>点赞数:{{ article_obj.like_num }}</span>
+                         &nbsp;&nbsp;&nbsp;&nbsp;
+                        <span>吐槽数:{{ article_obj.dislike_num }}</span>
+                         &nbsp;&nbsp;&nbsp;&nbsp;
+                    </p>
+                </div>
+                {# 文章标签 #}
+                <div style="margin-bottom: 5px;">
+                   {% for article_of_category in article_obj.category.all %}
+                        <span style="margin-right: 5px;background-color: #FA8EAA;font-family: bold">{{ article_of_category.name }}</span>
+                   {% endfor %}
+                    
+                </div>
+                {# 文章摘要 #}
+                <div style="width:690px;
+                            height: 76px;
+                            margin:2px auto;
+                            background-color: gainsboro;
+                            border: 1px solid gray;
+                            ">
+                    <p class="lead" style="font-size:14px;font-weight:bold">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ article_obj.summary }}</p>
+                </div>
+                <div><hr></div>
+                {# 正文 #}
+                <div style="clear: both;">
+                    {% for p in article_obj.text %}
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ p }}</p>
+                    {% endfor %}
+
+                </div>
+                <div><hr></div>
+
+                {# 评论 #}
+                <div>
+                    {# 添加评论 #}
+                    <div>
+                        <form action="" method="post" enctype="multipart/form-data">
+                            <textarea class="form-control" rows="3" onclick="" placeholder="我要评论"></textarea>
+                            <div style="float: right;margin-right: 20px;margin-top: 10px;">
+                                <input class="btn btn-success" type="submit" value="提交评论" >
+                            </div>
+                        </form>
+                        <script>
+
+                        </script>
+                    </div>
+
+                    {# 已有评论 #}
+                    <div style="clear: both;margin-top: 30px;">
+                        <div>
+                            <h2 style="font-size: 16px;font-weight: bold;">已有评论</h2>
+                        </div>
+                        <div>
+
+                            {% for c in article_obj.comment_set.all %}
+                                {% if c.comment_type == 1 %}
+                                    <div style="border: 1px solid lightgray;padding: 5px;margin-bottom: 3px;">
+                                    <p><a href="/account?uid={{ c.account.id }}">{{ c.account.name }}</a>
+                                        <span style="margin-left: 20px;">{{ c.comment_date|date:'Y-m-d' }}</span>
+                                        <span style="margin-left: 20px"><a href="">回复</a></span>
+                                    </p>
+                                    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ c.comment_text }}</p>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+
+            </div>
+
+        </div>
+
+        {# 相关文章 #}
+        <div style="clear: both;position: absolute;right: -410px;width: 400px">
+            <div>
+                <h3 style="">相关文章</h3>
+            </div>
+            <div>
+                {% for article_query_set_list in article_for_category_list %}
+                    {% for article_for_category_obj in article_query_set_list %}
+                        <p style="font-size: 14px">
+                            <a href="/article/article_detail?article_id={{article_for_category_obj.id}}">{{article_for_category_obj.title }}</a>
+                        </p>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+
+        </div>
+
+
+    </div>
+
+    {# 底部 #}
+    {% include 'base/foot.html' %}
+</div>
+</body>
+</html>

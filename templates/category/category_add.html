@@ -2,6 +2,7 @@
 <meta http-equiv='Content-type' content='text/htm'>
 <html lang="en">
 <head>
+    <title>Title</title>
     {% include 'base/head.html' %}
 </head>
 <body>
@@ -18,7 +19,7 @@
 
                 <label for="exampleInputEmail1">请输入新的标签名称</label>
                 <input type="text" class="form-control" id="exampleInputEmail1" name="category_name" placeholder="标签名称">
-
+                <p style="color: red">{{ errorstr }}</p>
                 <label for="exampleInputName1">请输入新的标签编号</label>
                 <input type="number" class="form-control" id="exampleInputName1" name="category_orderNo" placeholder="标签编号" >
 
