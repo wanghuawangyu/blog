@@ -9,35 +9,13 @@ from database import models
 from functools import wraps
 from public_function_blog import *
 
-def login_check(func):
-    @wraps(func)
-    def inner(request,*args,**kwargs):
-        uid=request.COOKIES.get('uid')
-        uname=request.COOKIES.get('uname')
-        isLogin=request.COOKIES.get('isLogin')
-        if isLogin == "True":
-            print(uid, uname, isLogin, '***' * 100)
-            if models.Account.objects.filter(id=uid).exists():
-                account_obj=models.Account.objects.get(id=uid)
-            else:
-                return render(request,'account/login.html')
-
-            if account_obj.name==uname:
-                return func(request)
-            else:
-                return render(request,'account/login.html')
-        else:
-            return render(request,'account/login.html')
-    return inner
-
-
 
 @login_check
 def category_list(request):
 
     # 数据库查询
     uid=request.COOKIES.get('uid','')
-    print('uid',uid)
+    # print('uid',uid)
     category_objs = models.Category.objects.filter(account_id=uid).order_by("orderNo") #给侧边栏和网页主体用
 
     print(category_objs)
