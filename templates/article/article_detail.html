@@ -129,13 +129,25 @@
                 <div>
                     {# 添加评论 #}
                     <div>
-                        <form action="" method="post" enctype="multipart/form-data">
-                            <textarea class="form-control" rows="3" onclick="" placeholder="我要评论"></textarea>
-                            <div style="float: right;margin-right: 20px;margin-top: 10px;">
-                                <input class="btn btn-success" type="submit" value="提交评论" >
-                            </div>
-                        </form>
+                        <div style="margin: 0 auto;width:300px;margin-bottom: 10px;">
+                            <span style="margin: 0 10px;"><button>点赞</button></span>
+                            <span style="margin: 0 10px;"><button>吐槽</button></span>
+                            <span style="margin: 0 10px;"><button class="btn btn-success" id="comment_add1" onclick="showCommentTextArea()">评论</button></span>
+                        </div>
                         <script>
+                            function showCommentTextArea(){
+                                var form='<div>'
+                                    form+='<form action="/comment/comment_add?article_id={{ article_obj.id }}" method="post" enctype="multipart/form-data">'
+                                    form+='<textarea name="comment_text" class="form-control" rows="3" onclick="" placeholder="我要评论"></textarea>'
+                                    form+='<div style="float: right;margin-right: 20px;margin-top: 10px;">'
+                                    form+='<input class="btn btn-success" type="submit" value="提交评论" >'
+                                    form+='</div>'
+                                    form+='</form>'
+                                    form+='</div>'
+                                    $form=$(form)
+                                console.log($form)
+                                $('#comment_add1').parent().parent().parent().append($form)
+                            }
 
                         </script>
                     </div>

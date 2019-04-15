@@ -24,14 +24,14 @@ def login_check(func):
             if models.Account.objects.filter(id=uid).exists():
                 account_obj=models.Account.objects.get(id=uid)
             else:
-                return render(request,'account/login.html')
+                return redirect('/account/login')
 
             if account_obj.name==uname:
                 return func(request)
             else:
-                return render(request,'account/login.html')
+                return redirect('/account/login')
         else:
-            return render(request,'account/login.html')
+            return redirect('/account/login')
     return inner
 
 def page_html_create(request,database_objs,per_page=10,max_page=11):
@@ -77,13 +77,13 @@ def page_html_create(request,database_objs,per_page=10,max_page=11):
     prev_page = page_num - 1 if page_num > 1 else page_num
     next_page = page_num + 1 if page_num < totol_page else totol_page
 
-    print('half_max_page',half_max_page)
-    print('page_num',page_num)
-    print('totol_page',totol_page)
-    print('max_page',max_page)
-
+    # print('half_max_page',half_max_page)
+    # print('page_num',page_num)
+    # print('totol_page',totol_page)
+    # print('max_page',max_page)
+    #
     page_start = page_num - half_max_page+1
-    print('page_start', page_start)
+    # print('page_start', page_start)
 
     if page_start <= 1:
         page_start = 1
@@ -100,7 +100,7 @@ def page_html_create(request,database_objs,per_page=10,max_page=11):
         page_end = totol_page
     if page_num >= totol_page - half_max_page:
         page_end = totol_page
-    print('page_end',page_end)
+    # print('page_end',page_end)
 
 
     # 自己拼接一个分页html代码
