@@ -22,7 +22,11 @@ def category_list(request):
     print(request.path_info)
 
     # 分页处理
-    page_html,category_objs_slice=page_html_create(request,category_objs,10,10)
+    if category_objs:
+        page_html,category_objs_slice=page_html_create(request,category_objs,10,10)
+    else:
+        page_html=''
+        category_objs_slice=category_objs
 
     # 获取分组对应文章数量
     artical_counts = article_counts_category(request)
@@ -119,8 +123,8 @@ def category_delete(request):
 
 def category_login(request):
     res=redirect('/category/')
-    res.set_cookie('uid',102,max_age=365*24*3600)
-    res.set_cookie('uname',"E0",max_age=365*24*3600)
+    res.set_cookie('uid',195,max_age=365*24*3600)
+    res.set_cookie('uname',"K931",max_age=365*24*3600)
     res.set_cookie('isLogin',True,max_age=365*24*3600)
     return res
 

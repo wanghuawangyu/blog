@@ -1,0 +1,91 @@
+{# <!DOCTYPE html> #}
+<meta http-equiv='Content-type' content='text/htm'>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>朋友信息</title>
+    {% include 'base/head.html' %}
+
+</head>
+<body>
+<div style="width: 1000px;margin:0 auto;">
+{% include 'base/private_top.html' %}
+{#{% include 'base/private_cebianlan.html' %}#}
+<div style="float: left">
+<div class="list-group" style="border: 1px solid #DDDDDD;width: 220px">
+    <h3 style="background: deepskyblue;margin-top: 0">公告</h3>
+    <p>昵称：{{ account_objs.name}}</p>
+    <p>性别:{{ account_objs.gender }}</p>
+    <p>入岛时间：{{ account_objs.regis_date|date:"Y-m-d" }}</p>
+    <p>爱好:{{ account_objs.hobby }}</p>
+    <p>个性签名:{{ account_objs.description }}</p>
+</div>
+
+<div class="list-group" style="width:220px;float: left;margin-right: 10px" >
+
+  <a href="/article/article_list?category=all&user_id={{account_objs.id}}" class="list-group-item {% if request.path_info == '/article' %}active{% endif %}">文章管理</a>
+  <a href="/article/article_list?category=all&user_id={{account_objs.id}}" class="list-group-item {% if request.path_info == '/article/article_list' and request.GET.category == 'all' %}active{% endif %}">&nbsp;&nbsp;&nbsp;所有文章<span class="badge">{{artical_counts.0}}</span></a>
+    {% for foo in category_objs %}
+        {% for artical_count in artical_counts.1 %}
+            {% if forloop.parentloop.counter == forloop.counter %}
+                <a href="/article/article_list?category={{ foo.id }}&user_id={{account_objs.id}}" class="list-group-item {% if request.path_info == '/article/article_list'  and request.GET.category == foo.id %}active{% endif %}">&nbsp;&nbsp;&nbsp;{{foo.name}}<span class="badge">{{artical_count}}</span></a>
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+  <a href="/article/article_list?category=draft&user_id={{account_objs.id}}" class="list-group-item {% if request.path_info == '/article/article' and request.GET.category == 'draft' %}active{% endif %}">&nbsp;&nbsp;&nbsp;草稿<span class="badge">{{artical_counts.2}}</span></a>
+
+
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    {% for i in art_objs %}
+    <div style="margin-left:260px;">
+        <h3><a href="/article/article_detail?article_id={{ i.id }}">{{ i.title }}</a></h3>
+
+{#        <h5>文章摘要</h5>#}
+        {% if i.summary %}
+            <p>{{ i.summary }}</p>
+        {% else %}
+            <p>{{ i.text|truncatechars:150 }}</p>
+        {% endif %}
+
+
+{#        <br>#}
+        <span>发表时间:{{ i.create_date|date:'Y-m-d' }}</span>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <span>浏览量:{{ i.read_num }}</span>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <span>评论数:{{ i.comment_num }}</span>
+         &nbsp;&nbsp;&nbsp;&nbsp;
+        <span>点赞数:{{ i.like_num }}</span>
+         &nbsp;&nbsp;&nbsp;&nbsp;
+        <span>吐槽数:{{ i.dislike_num }}</span>
+         &nbsp;&nbsp;&nbsp;&nbsp;
+{#        <br>#}
+        <hr style="margin: 5px 0 10px 0">
+
+    </div>
+    {% endfor %}
+    <div style="margin-left:360px;">
+    {{ page_html|safe }}.
+        </div>
+{% include "base/foot.html" %}
+</div>
+</body>
+</html>

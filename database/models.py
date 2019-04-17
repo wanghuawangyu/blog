@@ -10,8 +10,8 @@ class Account(models.Model):
     email=models.CharField(max_length=64,unique=True) #邮箱
     hobby=models.CharField(max_length=256,default=None) #邮箱
     description=models.CharField(max_length=512,default=None) #邮箱
-    regis_date=models.DateField(auto_now_add=True) #注册日期
-    modify_date=models.DateField(auto_now=True) #最后更新日期
+    regis_date=models.DateTimeField(auto_now_add=True) #注册日期
+    modify_date=models.DateTimeField(auto_now=True) #最后更新日期
     blog_num=models.SmallIntegerField(default=0) #发表博客数
     friend=models.ManyToManyField(to="Account") #关联好友
 
@@ -38,8 +38,8 @@ class Article(models.Model):
     like_num=models.SmallIntegerField(default=0) #喜欢数 点赞数
     dislike_num=models.SmallIntegerField(default=0) #不喜欢数 吐槽数
 
-    create_date=models.DateField(auto_now_add=True) #创建日期
-    modify_date=models.DateField(auto_now=True) #修改日期
+    create_date=models.DateTimeField(auto_now_add=True) #创建日期
+    modify_date=models.DateTimeField(auto_now=True) #修改日期
 
     account=models.ForeignKey(to="Account") #文章作者
     category=models.ManyToManyField(to="Category") #文章分类
@@ -49,9 +49,16 @@ class Comment(models.Model):
     id = models.AutoField(primary_key=True)  # 评论id
     comment_type=models.SmallIntegerField(default=1) #评论类型 1：文本 2：like 3：dislike
     comment_text=models.CharField(max_length=512,default=None,db_index=True) #评论内容
-    comment_date=models.DateField(auto_now_add=True) #评论日期
+    comment_date=models.DateTimeField(auto_now_add=True) #评论日期事件
     # coment_retry=models.CharField(max_length=512,default=None,db_index=True) #回复内容
     # coment_retry_date=models.DateField(auto_now_add=True)# 回复时间
-
+    retry=models.ForeignKey(to='Comment',null=True) #该评论关联的评论
     article=models.ForeignKey(to="Article") #评论对应的文章id
     account=models.ForeignKey(to="Account") #评论对应的账户id
+
+# class Comment2Retry(models.Model):
+#     id=models.AutoField(primary_key=True)
+#     from_comment_id=models.ForeignKey(to='Comment')
+#     to_comment_id=models.ForeignKey(to="Comment")
+#     coment_retry_date = models.DateField(auto_now_add=True)  # 回复时间
+

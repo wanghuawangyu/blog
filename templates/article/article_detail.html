@@ -87,6 +87,8 @@
                 {# 文章信息 #}
                 <div style="clear: both;padding: 0px;line-height:30px;">
                     <p style="text-align: center">
+                        <span>作者：<a href="/account/friendInfos?user_id={{  article_obj.account.id }}">{{ article_obj.account.name}}</a></span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
                         <span>发表时间:{{ article_obj.create_date|date:'Y-m-d' }}</span>
                         &nbsp;&nbsp;&nbsp;&nbsp;
                         <span>浏览量:{{ article_obj.read_num }}</span>
@@ -130,23 +132,30 @@
                     {# 添加评论 #}
                     <div>
                         <div style="margin: 0 auto;width:300px;margin-bottom: 10px;">
-                            <span style="margin: 0 10px;"><button>点赞</button></span>
-                            <span style="margin: 0 10px;"><button>吐槽</button></span>
+                            <span style="margin: 0 10px;"><a href="javascript:void(0)"><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span></a></span>
+                            <span style="margin: 0 10px;"><a href="javascript:void(0)"><span class="glyphicon glyphicon-hand-down" aria-hidden="true"></span></a></span>
+{#                            <span style="margin: 0 10px;"><button>吐槽</button></span>#}
                             <span style="margin: 0 10px;"><button class="btn btn-success" id="comment_add1" onclick="showCommentTextArea()">评论</button></span>
                         </div>
                         <script>
                             function showCommentTextArea(){
-                                var form='<div>'
+                                console.log($(this))
+                                var form='<div id="showCommentTextArea">'
                                     form+='<form action="/comment/comment_add?article_id={{ article_obj.id }}" method="post" enctype="multipart/form-data">'
                                     form+='<textarea name="comment_text" class="form-control" rows="3" onclick="" placeholder="我要评论"></textarea>'
-                                    form+='<div style="float: right;margin-right: 20px;margin-top: 10px;">'
-                                    form+='<input class="btn btn-success" type="submit" value="提交评论" >'
+                                    form+='<div style="margin-top: 10px;">'
+                                    form+='<input class="btn btn-default" type="button" value="取消评论" onclick="cancelComment()" style="position: relative;left:480px;margin-right:10px" >'
+                                    form+='<input class="btn btn-success" type="submit" value="提交评论" style="position: relative;left:480px;">'
                                     form+='</div>'
                                     form+='</form>'
                                     form+='</div>'
                                     $form=$(form)
                                 console.log($form)
                                 $('#comment_add1').parent().parent().parent().append($form)
+                            }
+                            
+                            function cancelComment() {
+                                $("#showCommentTextArea").remove()
                             }
 
                         </script>
@@ -161,15 +170,59 @@
 
                             {% for c in article_obj.comment_set.all %}
                                 {% if c.comment_type == 1 %}
-                                    <div style="border: 1px solid lightgray;padding: 5px;margin-bottom: 3px;">
-                                    <p><a href="/account?uid={{ c.account.id }}">{{ c.account.name }}</a>
-                                        <span style="margin-left: 20px;">{{ c.comment_date|date:'Y-m-d' }}</span>
-                                        <span style="margin-left: 20px"><a href="">回复</a></span>
-                                    </p>
-                                    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ c.comment_text }}</p>
-                                    </div>
+                                    {# 只显示评论类型为1的评论 #}
+                                    {% if c.retry %}
+                                        {# 如果这个评论评论的别人的评论 #}
+                                         <div style="border: 1px solid lightgray;padding: 5px;margin-bottom: 3px;">
+                                             <p><a href="/account/friendInfos?user_id={{ c.account.id }}">{{ c.account.name }}</a>
+                                                <span style="margin-left: 20px;">{{ c.comment_date|date:'Y-m-d' }}</span>
+                                                <span style="margin-left: 20px" id="showCommentRetryTextArea{{ forloop.counter }}"><a href="javascript:showCommentRetryTextArea('showCommentRetryTextArea{{ forloop.counter }}',{{ c.id }})">回复</a></span>
+                                             </p>
+                                             <p>
+                                                 <span style="margin-left: 20px">回复</span>
+                                                 <span style="margin-left: 20px"><a href="/account/friendInfos?user_id={{ c.retry.account.id }}">{{ c.retry.account.name }}</a>:</span>
+                                                 <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ c.comment_text }}</span>
+                                             </p>
+                                        </div>
+
+                                    {% else %}
+                                        {# 这个评论没有评论的别人的评论 #}
+                                        <div style="border: 1px solid lightgray;padding: 5px;margin-bottom: 3px;">
+                                            <p><a href="/account/friendInfos?user_id={{ c.account.id }}">{{ c.account.name }}</a>
+                                                <span style="margin-left: 20px;">{{ c.comment_date|date:'Y-m-d' }}</span>
+                                                <span style="margin-left: 20px" id="showCommentRetryTextArea{{ forloop.counter }}"><a href="javascript:showCommentRetryTextArea('showCommentRetryTextArea{{ forloop.counter }}',{{ c.id }})">回复</a></span>
+                                            </p>
+                                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ c.comment_text }}</p>
+                                        </div>
+                                    {% endif %}
+
                                 {% endif %}
                             {% endfor %}
+
+                            <script>
+                            function showCommentRetryTextArea(id,comment_id){
+                                //console.log($(this))
+                                var form='<div id="cancle'+id+'">'
+                                //console.log($(this).attr('values'))
+                                    form+='<form action="/comment/comment_retry_add?article_id={{ article_obj.id }}&comment_id='+ comment_id +'" method="post" enctype="multipart/form-data">'
+                                    form+='<textarea name="comment_text" class="form-control" rows="3" onclick="" placeholder="我要回复"></textarea>'
+                                    form+='<div style="margin-top: 10px;">'
+                                    form+='<input class="btn btn-default" type="button" value="取消回复" style="position: relative;left:480px;margin-right:10px" onclick="cancelCommentRetry(\''+ "cancle"+id +'\')">'
+                                    form+='<input class="btn btn-success" type="submit" value="提交回复" style="position: relative;left:480px;">'
+                                    form+='</div>'
+                                    form+='</form>'
+                                    form+='</div>'
+                                    $form=$(form)
+
+                                $("#"+id).parent().parent().append($form)
+                            }
+                            
+                            function cancelCommentRetry(id) {
+                                $('#'+id).remove()
+                            }
+
+                        </script>
+
                         </div>
                     </div>
 

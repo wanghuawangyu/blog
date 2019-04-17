@@ -15,9 +15,16 @@ def article_list(request):
     # 数据库查询
     uid=request.COOKIES.get('uid','')
     category_id=request.GET.get('category','all')
-
-    category_objs = models.Category.objects.filter(account_id=uid).order_by("orderNo")  # 给侧边栏用的 按排序顺序排序
-    article_objs=models.Article.objects.filter(account_id=uid).order_by('create_date').reverse() # 给主体用 按修改日期降序
+    user_id=request.GET.get('user_id',None)
+    if user_id:
+        category_objs=models.Category.objects.filter(account_id=user_id).order_by("orderNo")  # 给侧边栏用的 按排序顺序排序
+        article_objs = models.Article.objects.filter(account_id=user_id).order_by('create_date').reverse()  # 给主体用 按修改日期降序
+        account_objs=models.Account.objects.get(id=user_id)
+        artical_counts = article_counts_category(request,uid=user_id)
+    else:
+        category_objs = models.Category.objects.filter(account_id=uid).order_by("orderNo")  # 给侧边栏用的 按排序顺序排序
+        article_objs = models.Article.objects.filter(account_id=uid).order_by('create_date').reverse()  # 给主体用 按修改日期降序
+        artical_counts = article_counts_category(request)
     # 文章按分组筛选
     if category_id=='all':
         article_objs = article_objs
@@ -28,15 +35,26 @@ def article_list(request):
     else:
         category_objs_draft = category_objs.filter(id=category_id)
         article_objs = category_objs_draft[0].article_set.all()
-    print(article_objs)
+    # print(article_objs)
 
     # 分页处理
-    page_html,article_objs_slice=page_html_create(request,article_objs,6,10)
+    if user_id:
+        page_html,article_objs_slice=page_html_create(request,article_objs,6,10,path='/article/article_list?category={}&user_id={}'.format(category_id,user_id))
+    else:
+        page_html, article_objs_slice = page_html_create(request, article_objs, 6, 10)
 
-    # # 计算对应标签文章数
+
     artical_counts=article_counts_category(request)
-
-    return render(request,"article/article_list.html",{"category_objs":category_objs,
+    if user_id:
+        return render(request, "account/friendInfos.html", {"category_objs": category_objs,
+                                                             "art_objs": article_objs_slice,
+                                                             "request": request,
+                                                             'artical_counts': artical_counts,
+                                                             'page_html': page_html,
+                                                             "account_objs": account_objs,
+                                                             })
+    else:
+        return render(request,"article/article_list.html",{"category_objs":category_objs,
                                                          "article_objs_slice": article_objs_slice,
                                                          "request":request,
                                                          'artical_counts':artical_counts,

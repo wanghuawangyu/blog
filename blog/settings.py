@@ -28,6 +28,9 @@ DEBUG = True
 ALLOWED_HOSTS = [
     "127.0.0.1",
     '0.0.0.0',
+    '176.234.12.55',
+    'wangguohua.picp.vip',
+
 
 ]
 
@@ -86,7 +89,7 @@ WSGI_APPLICATION = 'blog.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        "HOST":"127.0.0.1",    #连接数据库的地址
+        "HOST":"user-wgh",    #连接数据库的地址
         "PORT":3306,   # 端口
         "NAME":"blog",    # 数据库名称
         "USER":"root",  # 用户
