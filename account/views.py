@@ -90,7 +90,7 @@ def account(request):
 #  注销cookies
 def logout(request):
     # 如何删除Cookie
-    rep = redirect("/account/login")
+    rep = redirect("/")
     rep.delete_cookie("isLogin")
     rep.delete_cookie("uid")
     rep.delete_cookie("uname")

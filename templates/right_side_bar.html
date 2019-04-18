@@ -1,0 +1,45 @@
+{% load blog_tags %}
+    {% block toc %}{% endblock %}
+    <div class="row">
+        <div class="widget">
+            <h3>推荐博客</h3>
+            {% get_popular_articles as popular_articles %}
+            {% for article in popular_articles %}
+                <div>
+                    <a href="/article/article_detail?article_id={{article.id }}">{{ article.title }}</a>
+                    <div>
+                        <span class="badge" style="color:white;background-color: skyblue">{{ article.comment_num }}</span>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <hr/>
+    <div class="row">
+        <div class="widget">
+            <h3>最新博客</h3>
+            {% get_new_articles as articles_list %}
+            {% for article in articles_list %}
+                <div>
+                    <a href="/article/article_detail?article_id={{article.id }}">{{ article.title }}</a>
+                    <div>
+                        {{ article.account }} 发表于：{{ article.create_date|date:'Y年m月d日' }}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <hr/>
+    <div class="row">
+        <div class="widget">
+            <h3>标签云</h3>
+            {% get_categories as categories_list %}
+            {% for category in categories_list %}
+                  <a style="display: inline-block;margin:5px" href="#">
+                      <span class="label {% cycle 'label-default' 'label-primary' 'label-success' 'label-info' 'label-warning' 'label-danger' %}">{{ category.name }}</span>
+                  </a>
+            {% endfor %}
+        </div>
+    </div>
+    <hr/>
+
