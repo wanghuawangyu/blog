@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'comment.apps.CommentConfig', # 评论管理
     'friend.apps.FriendConfig', #好友管理
     'database.apps.DatabaseConfig', #数据库管理
+    'main',
 ]
 
 MIDDLEWARE = [

@@ -32,7 +32,7 @@
                                 <a href="/friend/friend_del/?friend_id={{ i.id }}" style="float: right;line-height: 60px;">
                                     <span class="label label-danger" style="line-height:38px;margin-right:20px;">删除好友</span>
                                 </a>
-                                {{i.name}}
+                                <a href="/account/friendInfos?user_id={{  i.id  }}">{{i.name}}</a>
                             </div>
                         </li>
                     {% endfor %}
