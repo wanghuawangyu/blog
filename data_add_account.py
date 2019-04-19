@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # 用于批量创建数据库的数据
 comment_text='这篇文章很好'
 article_summary='''

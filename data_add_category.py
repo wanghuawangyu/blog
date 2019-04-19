@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 import os,sys
 from django.db.models import Avg, Sum, Max, Min, Count

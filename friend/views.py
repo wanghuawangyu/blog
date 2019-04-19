@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.shortcuts import HttpResponse,render,redirect
 import sys
 sys.path.append('..')
