@@ -69,7 +69,7 @@ def friend_list(request):
     artical_counts = article_counts_category(request)
 
     friend_lists, myapply_lists, applyme_lists=relations(uid)
-    print('+' * 10, friend_lists, myapply_lists, applyme_lists, sep='\n', )
+    # print('+' * 10, friend_lists, myapply_lists, applyme_lists, sep='\n')
 
     # 分页处理
 
@@ -194,7 +194,7 @@ def friend_add(request):
         #用户第一次来，返回一个用来填写的HTML页面
         return render(request,'friend/friend_add.html',{"category_objs":category_objs,
                                                         "artical_counts":artical_counts,
-                                                        'request':request,
+                                                        'request':request
                                                         })
 
 
@@ -248,7 +248,7 @@ def friend_apply(request):
                                                             "artical_counts": artical_counts,
                                                             'request': request,
                                                             'applyme_lists_slice':applyme_lists_slice,
-                                                            'page_html':page_html,
+                                                            'page_html':page_html
                                                             })
 
 
