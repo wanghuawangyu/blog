@@ -121,7 +121,7 @@ def signup(request):
 
             models.Account.objects.create(name=name1,password=password1,
                                           hobby=hobby3,description=des,
-                                          gender=gender1,email=email3,)
+                                          gender=gender1,email=email3)
 
             return redirect('/account/login')
         else:
