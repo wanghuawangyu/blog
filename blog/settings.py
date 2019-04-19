@@ -27,9 +27,11 @@ SECRET_KEY = 'er+x7$1-4mnwxa%wc)+4)c7d(d)-ru_193do9b_f3$f)1#1sbf'
 DEBUG = True
 
 ALLOWED_HOSTS = [
+    '*',
     "127.0.0.1",
     '0.0.0.0',
     '176.234.12.55',
+    '18.218.240.142',
     'wangguohua.picp.vip',
 
 
