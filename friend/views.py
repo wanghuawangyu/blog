@@ -56,7 +56,7 @@ def relations(uid):
             if friend not in applyme_lists:
                 # friend['option'] = '需处理好友申请'
                 applyme_lists.append(friend)
-    print('-'*10,friend_lists, myapply_lists, applyme_lists,sep='\n',)
+    # print('-'*10,friend_lists, myapply_lists, applyme_lists,sep='\n')
     return (friend_lists,myapply_lists,applyme_lists)
 
 
