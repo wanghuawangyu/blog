@@ -9,6 +9,7 @@ from django.db.models import Q
 from database import models
 
 from public_function_blog import *
+import json
 
 @login_check
 def comment_list(request):
@@ -37,25 +38,93 @@ def comment_list(request):
                                                          })
 
 @login_check
-def comment_edit(request):
-    pass
-
-@login_check
 def comment_add(request):
-    # print()
-    comment_type=1
-    comment_text=request.POST.get('comment_text')
-    account_id=request.COOKIES.get('uid')
-    article_id=request.GET.get("article_id")
+    account_id = request.COOKIES.get('uid')
+    article_id = request.GET.get("article_id")
+    comment_type=request.POST.get('comment_type',None)
+    if not comment_type:
+        comment_type = request.GET.get('comment_type')
 
-    models.Comment.objects.create(
-        comment_type=comment_type,
-        comment_text=comment_text,
-        article_id=article_id,
-        account_id=account_id,
-    )
+    if comment_type=="1":
+        comment_text=request.POST.get('comment_text')
+        models.Comment.objects.create(
+            comment_type=comment_type,
+            comment_text=comment_text,
+            article_id=article_id,
+            account_id=account_id,
+        )
+        article_obj=models.Article.objects.get(id=article_id)
+        article_obj.comment_num=article_obj.comment_set.filter(comment_type="1").count()
+        article_obj.save()
+        return redirect('/article/article_detail?article_id={}'.format(article_id))
+    elif comment_type=="2":
+        isLike=request.COOKIES.get('isLike',None)
+        isdisLike=request.COOKIES.get('isdisLike',None)
+        articleid=request.COOKIES.get('articleid',None)
 
-    return redirect('/article/article_detail?article_id={}'.format(article_id))
+
+        if isLike=="True" and isdisLike=="False" and articleid==article_id :
+
+            article_obj = models.Article.objects.get(id=article_id)
+            dict = {
+                "likenum": article_obj.like_num,
+                "action": "False"
+            }
+            return HttpResponse(json.dumps(dict))
+        else:
+            models.Comment.objects.create(
+                comment_type=comment_type,
+                comment_text="like",
+                article_id=article_id,
+                account_id=account_id,
+            )
+            article_obj = models.Article.objects.get(id=article_id)
+            article_obj.like_num = article_obj.comment_set.filter(comment_type="2").count()
+            article_obj.save()
+            dict = {
+                "likenum": article_obj.like_num,
+                "action": "+1"
+            }
+            resp = HttpResponse(json.dumps(dict))
+            resp.set_cookie('isLike', "True")
+            resp.set_cookie('isdisLike', "False")
+            resp.set_cookie('articleid', article_id)
+
+            return resp
+    elif comment_type=="3":
+        isLike=request.COOKIES.get('isLike',None)
+        isdisLike=request.COOKIES.get('isdisLike',None)
+        articleid = request.COOKIES.get('articleid', None)
+        print(isdisLike, type(isdisLike),isLike, type(isLike), articleid,type(articleid),article_id)
+        if isdisLike=='True' and isLike=="False" and articleid==article_id:
+            print('3')
+            article_obj = models.Article.objects.get(id=article_id)
+            dict = {
+                "dislikenum": article_obj.dislike_num,
+                "action": "False"
+            }
+            return HttpResponse(json.dumps(dict))
+        else:
+            models.Comment.objects.create(
+                comment_type=comment_type,
+                comment_text="dislike",
+                article_id=article_id,
+                account_id=account_id,
+            )
+            article_obj = models.Article.objects.get(id=article_id)
+            article_obj.dislike_num = article_obj.comment_set.filter(comment_type="3").count()
+            article_obj.save()
+            dict = {
+                "dislikenum": article_obj.dislike_num,
+                "action": "-1"
+            }
+            resp = HttpResponse(json.dumps(dict))
+            resp.set_cookie('isdisLike', "True")
+            resp.set_cookie('isLike', "False")
+            resp.set_cookie('articleid', article_id)
+            return resp
+
+
 
 
 @login_check
@@ -67,20 +136,23 @@ def comment_delete(request):
 
 @login_check
 def comment_retry_add(request):
-    # /comment/comment_retry_add?article_id=10001&comment_id=20022
-    comment_id=request.GET.get('comment_id')
-    article_id=request.GET.get('article_id')
-    comment_type=1
-    comment_text=request.POST.get('comment_text')
-    account_id = request.COOKIES.get('uid')
-    models.Comment.objects.create(comment_type=comment_type,
-                                  comment_text=comment_text,
-                                  retry_id=comment_id,
-                                  article_id=article_id,
-                                  account_id=account_id
-                                  )
-    # print(comment_id,article_id,'text',comment_text,account_id)
-    return redirect('/article/article_detail?article_id={}'.format(article_id))
+    comment_type = request.POST.get('comment_type')
+    if comment_type=="1":
+        comment_id=request.GET.get('comment_id')
+        article_id=request.GET.get('article_id')
+        comment_text=request.POST.get('comment_text')
+        account_id = request.COOKIES.get('uid')
+        models.Comment.objects.create(comment_type=comment_type,
+                                      comment_text=comment_text,
+                                      retry_id=comment_id,
+                                      article_id=article_id,
+                                      account_id=account_id
+                                      )
+
+        article_obj = models.Article.objects.get(id=article_id)
+        article_obj.comment_num = article_obj.comment_set.all().count()
+        article_obj.save()
+        return redirect('/article/article_detail?article_id={}'.format(article_id))
 
 
 @login_check
@@ -116,7 +188,7 @@ def comment_retry_me(request):
 
     # 分页处理
     page_html, comment_objs_slice = page_html_create(request, comment_list_new_new, 5, 10)
-    # print(page_html,comment_objs_slice)
+    print(page_html,comment_objs_slice)
     # 获取分组对应文章数量
     artical_counts = article_counts_category(request)
 

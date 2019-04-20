@@ -13,66 +13,54 @@ from public_function_blog import *
 @login_check
 def article_list(request):
 
-    # 数据库查询
-    uid=request.COOKIES.get('uid','')
-    category_id=request.GET.get('category','all')
-    user_id=request.GET.get('user_id',None)
-    if user_id:
-        category_objs=models.Category.objects.filter(account_id=user_id).order_by("orderNo")  # 给侧边栏用的 按排序顺序排序
-        article_objs = models.Article.objects.filter(account_id=user_id).order_by('create_date').reverse()  # 给主体用 按修改日期降序
-        account_objs=models.Account.objects.get(id=user_id)
-        artical_counts = article_counts_category(request,uid=user_id)
-    else:
-        category_objs = models.Category.objects.filter(account_id=uid).order_by("orderNo")  # 给侧边栏用的 按排序顺序排序
-        article_objs = models.Article.objects.filter(account_id=uid).order_by('create_date').reverse()  # 给主体用 按修改日期降序
-        artical_counts = article_counts_category(request)
+    uid = request.COOKIES.get('uid', '')
+    category_objs = models.Category.objects.filter(account_id=uid).order_by("orderNo")  # 给侧边栏用的 按排序顺序排序
+    category_id=request.GET.get('category',None)
+
+    if category_id:
+        category_obj=models.Category.objects.get(id=category_id,account_id=uid)
+
     # 文章按分组筛选
-    if category_id=='all':
-        article_objs = article_objs
-    elif category_id=='draft':
-        category_objs_draft=category_objs.filter(name='草稿')
-        if category_objs_draft.exists():
-            article_objs=category_objs_draft[0].article_set.all()
+    if not category_id:
+        article_objs = models.Article.objects.filter(account_id=uid).all()#.order_by('create_date').reverse()
+        print(article_objs,article_objs.count())
+    elif category_obj.name=="所有文章":
+        article_objs=models.Article.objects.filter(account_id=uid).order_by('create_date').reverse()
     else:
-        category_objs_draft = category_objs.filter(id=category_id)
-        article_objs = category_objs_draft[0].article_set.all()
-    # print(article_objs)
+        article_objs = category_obj.article_set.all()
+
+    # print('article_objs',article_objs,"category_id",category_id)
 
     # 分页处理
-    if user_id:
-        page_html,article_objs_slice=page_html_create(request,article_objs,6,10,path='/article/article_list?category={}&user_id={}'.format(category_id,user_id))
-    else:
-        page_html, article_objs_slice = page_html_create(request, article_objs, 6, 10)
+    page_html, article_objs_slice = page_html_create(request, article_objs, 6, 10,path=request.path_info)
 
+    return render(request,"article/article_list.html",{"category_objs":category_objs,
+                                                     "article_objs_slice": article_objs_slice,
+                                                     "request":request,
+                                                     'page_html': page_html
+                                                     })
 
-    artical_counts=article_counts_category(request)
-    if user_id:
-        return render(request, "account/friendInfos.html", {"category_objs": category_objs,
-                                                             "art_objs": article_objs_slice,
-                                                             "request": request,
-                                                             'artical_counts': artical_counts,
-                                                             'page_html': page_html,
-                                                             "account_objs": account_objs,
-                                                             })
-    else:
-        return render(request,"article/article_list.html",{"category_objs":category_objs,
-                                                         "article_objs_slice": article_objs_slice,
-                                                         "request":request,
-                                                         'artical_counts':artical_counts,
-                                                         'page_html': page_html
-                                                         })
-
-@login_check
+# @login_check
 def article_detail(request):
-    uid = request.COOKIES.get('uid', '')
+    uid = request.COOKIES.get('uid', None)
     article_id=request.GET.get('article_id')
-    category_objs = models.Category.objects.filter(account_id=uid).order_by("orderNo")  # 给侧边栏用的 按排序顺序排序
-
-    # # 计算对应标签文章数
-    artical_counts = article_counts_category(request)
 
     # 获取文章
     article_obj = models.Article.objects.get(id=article_id)  # 给主体用
+
+    # 增加阅读此处
+    if uid:
+        if article_obj.account_id != int(uid):
+            article_obj.read_num+=1
+            article_obj.save()
+    else:
+        article_obj.read_num += 1
+        article_obj.save()
+
+    # category_objs = models.Category.objects.filter(account_id=uid).order_by("orderNo")  # 给侧边栏用的 按排序顺序排序
+    category_objs = article_obj.category.all()
+
+
 
     # 处理摘要的空字符
     article_summary=article_obj.summary.strip().replace('\r\n','\n')
@@ -86,7 +74,6 @@ def article_detail(request):
         list_summary_new.append(p)
 
     article_obj.summary=''.join(list_summary_new)
-    # print(article_obj.summary)
 
     # 处理正文的空字符
     article_text=article_obj.text.strip().replace('\r\n','\n')
@@ -95,7 +82,6 @@ def article_detail(request):
     for p in list_text:
         p.strip()
         list_text_new.append(p)
-    # print('length:',len(list_text_new),'\n',list_text_new)
     article_obj.text = list_text_new
 
     #获取标签名相近的所有文章
@@ -120,27 +106,36 @@ def article_detail(request):
             if article_for_category_count>10:
                 break;
 
-    # print('article_category_objs:',article_category_objs)
-    # print('article_for_category_list:',article_for_category_list)
-    # print('article_for_category_list_new_list:',article_for_category_list_new_list)
-    # print('article_for_category_count:',article_for_category_count)
-
-    # print(article_obj.account_id,type(article_obj.account_id))
-    # print(request.COOKIES.get('uid'),type(request.COOKIES.get('uid')))
-
     return render(request,"article/article_detail.html",{"category_objs":category_objs,
                                                          "request":request,
-                                                         'artical_counts':artical_counts,
                                                          "article_obj": article_obj,
                                                          'article_for_category_list':article_for_category_list_new_list,
                                                          })
+
+
+def article_category_id_input_judge(category_input_ids,uid,):
+    # 处理得到的分组id值
+    draft_obj = models.Category.objects.get(account_id=uid, name='草稿')
+    draft_id = draft_obj.id
+    all_category_obj = models.Category.objects.get(account_id=uid, name='所有文章')
+    all_category_id = all_category_obj.id
+    no_category_obj = models.Category.objects.get(account_id=uid, name='无标签文章')
+    no_category_id = no_category_obj.id
+
+    if not category_input_ids:
+        category_input_ids = [all_category_id, no_category_id]
+    elif len(category_input_ids) == 1 and int(category_input_ids[0]) == draft_id:
+        pass
+    else:
+        category_input_ids.append(str(all_category_id))
+    return category_input_ids
+
 
 @login_check
 def article_edit(request):
     uid = request.COOKIES.get('uid', '')
     category_objs = models.Category.objects.filter(account_id=uid).order_by("orderNo")  # 给侧边栏用的 按排序顺序排序
-    # # 计算对应标签文章数
-    artical_counts = article_counts_category(request)
+
     if request.method=='POST':
         article_id = request.GET.get('article_id')
         # 获取文章
@@ -150,16 +145,20 @@ def article_edit(request):
         title=request.POST.get('article_title',article_obj.title)
         summary=request.POST.get('article_summary',article_obj.summary)
         text=request.POST.get('article_text',article_obj.text)
-        category_id=request.POST.getlist('article_category_id')
+
+        # 处理得到的分组id值
+        category_ids=request.POST.getlist('article_category_id')
+        category_ids=article_category_id_input_judge(category_ids,uid)
 
         #修改文章的数据库值
         article_obj.title=title
         article_obj.summary=summary
         article_obj.text=text
-        article_obj.category.set(category_id)
+        article_obj.category.set(category_ids)
         article_obj.save()
 
         return redirect('/article/article_detail?article_id={}'.format(article_id))
+
     if request.method=='GET':
         article_id = request.GET.get('article_id')
         # 获取文章
@@ -173,9 +172,7 @@ def article_edit(request):
         for p in list_summary:
             p.strip()
             list_summary_new.append(p)
-
         article_obj.summary = ''.join(list_summary_new)
-
         # 处理正文的空字符
         article_text = article_obj.text.strip().replace('\r\n', '\n')
         list_text = article_text.split('\n')
@@ -186,26 +183,18 @@ def article_edit(request):
 
         article_obj.text = list_text_new
 
-        for category_obj in category_objs:
-            if category_obj in article_obj.category.all():
-                print(True)
-            else:
-                print(False)
+        category_objs_show = models.Category.objects.filter(account_id=uid).exclude(name__in=['无标签文章', '所有文章']).order_by("orderNo")
 
-        # print(category_objs,type(category_objs))
-        # print(article_obj.category.all(),type(article_obj.category.all()))
-
-
-        # print('article_id',article_id)
         return render(request,"article/article_edit.html",{"category_objs":category_objs,
                                                          "request":request,
-                                                         'artical_counts':artical_counts,
                                                          "article_obj": article_obj,
+                                                          "category_objs_show":category_objs_show
                                                          })
 @login_check
 def article_add(request):
     uid = request.COOKIES.get('uid', '')
     category_objs = models.Category.objects.filter(account_id=uid).order_by("orderNo")  # 给侧边栏用的 按排序顺序排序
+    # print(category_objs)
     # # 计算对应标签文章数
     artical_counts = article_counts_category(request)
     if request.method=='POST':
@@ -213,7 +202,11 @@ def article_add(request):
         title=request.POST.get('article_title','默认标题')
         summary=request.POST.get('article_summary','默认摘要')
         text=request.POST.get('article_text','默认正文')
-        category_id=request.POST.getlist('article_category_id')
+
+        # 处理得到的category_id
+        category_id = request.POST.getlist('article_category_id')
+        category_ids = article_category_id_input_judge(category_id, uid)
+
         article_obj=models.Article(title=title,
                                   summary=summary,
                                   text=text,
@@ -224,21 +217,30 @@ def article_add(request):
         # 查询新增的数据对象
         article_obj_add=models.Article.objects.filter(title=title,account_id=uid).order_by('create_date').reverse().first()
 
-        article_obj_add.category.set(category_id)
+        article_obj_add.category.set(category_ids)
+
+        account_obj=models.Account.objects.get(id=uid)
+        account_obj.blog_num+=1
+        account_obj.save()
+
         return redirect('/article/article_list')
 
     if request.method == 'GET':
+        category_objs_show = models.Category.objects.filter(account_id=uid).exclude(name__in=['无标签文章', '所有文章']).order_by("orderNo")
         return render(request,"article/article_add.html",{"category_objs":category_objs,
                                                          "request":request,
                                                          'artical_counts':artical_counts,
+                                                          'category_objs_show':category_objs_show
                                                          })
-
 @login_check
 def article_delete(request):
     article_id = request.GET.get('article_id')
     # 获取文章
     article_obj = models.Article.objects.get(id=article_id)  # 给主体用
     # 删除文章
-
+    comment_objs=article_obj.comment_set.all()
+    if comment_objs:
+        comment_objs.delete()
     article_obj.delete()
-    return redirect('/article/article_list/')
+
+    return redirect('/article/article_list')

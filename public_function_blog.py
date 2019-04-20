@@ -44,7 +44,6 @@ def page_html_create(request,database_objs,per_page=10,max_page=11,path=None):
 
     if not path:
         path=request.path_info
-    print('xx+xxxxx' * 10, path)
     if database_objs:
         # 分页处理 开始
         page_num = request.GET.get('page', '1')
@@ -162,7 +161,7 @@ def page_html_create(request,database_objs,per_page=10,max_page=11,path=None):
         html_str_list.append('</nav>')
 
         page_html = ''.join(html_str_list)
-        print(page_html)
+        # print(page_html)
         databases_objs_slice = database_objs[(page_num - 1) * per_page:page_num * per_page]
         return (page_html,databases_objs_slice)
     else:
@@ -178,23 +177,12 @@ def article_counts_category(request,uid=None):
     if not uid:
         uid = request.COOKIES.get('uid', '')
 
-    category_objs = models.Category.objects.filter(account_id=uid) #给侧边栏用的 按排序顺序排序
-    article_objs = models.Article.objects.filter(account_id=uid).order_by("create_date")  # 给主体用 按修改日期排序
-
-    # 所有文章数
-    artical_count_all = article_objs.count()
+    category_objs = models.Category.objects.filter(account_id=uid).order_by('orderNo') #给侧边栏用的 按排序顺序排序
 
     # 自定义标签文章数
     artical_counts = []
     for category in category_objs:
-        artical_count = category.article_set.filter(account_id=uid).count()
+        artical_count = category.article_set.all().count()
         artical_counts.append(artical_count)
 
-    # 草稿组文章数
-    category_objs_draft=models.Category.objects.filter(account_id=uid,name='草稿')
-    if category_objs_draft:
-        artical_count_draft=category_objs_draft[0].article_set.filter(account_id=uid).count()
-    else:
-        artical_count_draft = 0
-
-    return (artical_count_all,artical_counts,artical_count_draft)
+    return artical_counts

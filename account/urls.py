@@ -28,6 +28,8 @@ urlpatterns = [
     url(r'profile', views.profile),
     url(r'password', views.password),
     url(r'friendInfos', views.friendInfos),
+    url(r'article_list', views.article_list),
+    url(r'article', views.article),
     url(r'',views.account)
 
 ]

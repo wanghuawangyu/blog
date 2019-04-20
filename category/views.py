@@ -19,12 +19,14 @@ def category_list(request):
     # print('uid',uid)
     category_objs = models.Category.objects.filter(account_id=uid).order_by("orderNo") #给侧边栏和网页主体用
 
-    # print(category_objs)
-    # print(request.path_info)
+    print(category_objs)
+    print(request.path_info)
+
 
     # 分页处理
-    if category_objs:
-        page_html,category_objs_slice=page_html_create(request,category_objs,10,10)
+    category_objs_show=models.Category.objects.filter(account_id=uid).exclude(name__in=['草稿','无标签文章','所有文章'])
+    if category_objs_show:
+        page_html,category_objs_slice=page_html_create(request,category_objs_show,10,10)
     else:
         page_html=''
         category_objs_slice=category_objs
@@ -41,7 +43,7 @@ def category_list(request):
 @login_check
 def category_edit(request):
     uid=request.COOKIES.get('uid','')
-    category_objs = models.Category.objects.filter(account_id=uid)
+    category_objs = models.Category.objects.filter(account_id=uid).order_by("orderNo") #给侧边栏和网页主体用
 
     if request.method=='GET':
         # 获取分组对应文章数量
@@ -58,7 +60,16 @@ def category_edit(request):
         category_edit_id=request.POST.get('category_id')
         category_edit_obj = models.Category.objects.get(account_id=uid, id=category_edit_id)
         new_category_name=request.POST.get('category_name')
-        if new_category_name=='草稿' or new_category_name=='所有文章':
+
+        flag = False
+        if new_category_name == '草稿' and models.Category.objects.filter(account_id=uid, name='草稿').exists():
+            flag = True
+        elif new_category_name == '无标签文章' and models.Category.objects.filter(account_id=uid, name='无标签文章').exists():
+            flag = True
+        elif new_category_name == '所有文章' and models.Category.objects.filter(account_id=uid, name='所有文章').exists():
+            flag = True
+
+        if flag:
             errorstr='标签名称不可用'
             # 获取分组对应文章数量
             artical_counts = article_counts_category(request)
@@ -70,6 +81,16 @@ def category_edit(request):
                                                                    })
         new_category_description=request.POST.get('category_description')
         new_category_orderNo=request.POST.get('category_orderNo')
+
+        if new_category_name == '草稿':
+            big_category=models.Category.objects.filter(account_id=uid).order_by('id').reverse().first()
+            if big_category.id<999:
+                new_category_orderNo = 999
+            else:
+                new_category_orderNo = big_category.id+1
+        elif new_category_name in ['无标签文章', '所有文章']:
+            new_category_orderNo = 0
+
         # print(new_category_name,new_category_description,new_category_orderNo)
 
         category_obj = models.Category.objects.get(id=category_edit_id,account_id=uid)
@@ -87,7 +108,7 @@ def category_add(request):
 
     # 获取分组对应文章数量
     artical_counts = article_counts_category(request)
-    # print(category_objs)
+    print(category_objs)
     if request.method=='GET':
         return render(request,'category/category_add.html',{"category_objs":category_objs,
                                                             'request': request,
@@ -97,13 +118,27 @@ def category_add(request):
         add_category_name=request.POST.get('category_name')
         add_category_description=request.POST.get('category_description')
         add_category_orderNo=request.POST.get('category_orderNo')
-        if add_category_name=='草稿' or add_category_name=='所有文章':
+
+        flag=False
+        if add_category_name=='草稿' and models.Category.objects.filter(account_id=uid,name='草稿').exists():
+            flag=True
+        elif add_category_name=='无标签文章' and models.Category.objects.filter(account_id=uid,name='无标签文章').exists():
+            flag = True
+        elif add_category_name == '所有文章' and models.Category.objects.filter(account_id=uid, name='所有文章').exists():
+            flag = True
+
+        if flag:
             errorstr='标签名称不可用'
             return render(request,'category/category_add.html',{"category_objs":category_objs,
                                                                 'request': request,
                                                                 "errorstr": errorstr,
                                                                 'artical_counts': artical_counts,
                                                                 })
+        if  add_category_name=='草稿':
+            add_category_orderNo=999
+        elif add_category_name in ['无标签文章','所有文章']:
+            add_category_orderNo = 0
+
         category_obj=models.Category(name=add_category_name,
                                      description=add_category_description,
                                      orderNo=add_category_orderNo

@@ -4,19 +4,24 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-{% include 'base/head.html' %}
+    {% include 'base/head.html' %}
 
 </head>
 <body>
 <div style="width: 1000px;margin: 0 auto">
     {# 顶部 #}
     <div style="height:50px;position: relative">
-    {#  顶部：左侧logo  #}
-        <div style="background:transparent url('/static/jpg/logo.png') no-repeat center center;background-size:100px;width: 100px;height:40px;"></div>
+        {#  顶部：左侧logo  #}
+        <div style="width: 100px;height: 40px;">
+            <a href="/">
+                <div style="background:transparent url('/static/jpg/logo.png') no-repeat center center;background-size:100px;width: 100px;height:40px;">
+                </div>
+            </a>
+        </div>
 
-    {#  顶部：右侧下拉导航  #}
+        {#  顶部：右侧下拉导航  #}
         <div class="dropdown" style="position: absolute;top: 0;right:0;">
-
+            {% if request.COOKIES.isLogin == "True" %}
                 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                     {{request.COOKIES.uname}}
                     <span class="caret" ></span>
@@ -29,17 +34,32 @@
                     <li><a href="/comment">评论管理</a></li>
                 </ul>
                 <button class="btn btn-default">退出登陆</button>
-            <script>
-                $('#dropdownMenu1').click(function () {
-                    $(this).next("ul").css("display", 'block').css("z-index","1000");
-                });
-                 $('#dropdownMenu1+ul').mouseover(function () {
-                    $(this).css("display",'block').css("z-index","1000");
-                });
-                 $('#dropdownMenu1+ul').mouseout(function () {
-                    $(this).css("display",'none');
-                 });
-            </script>
+                <script>
+                    $('#dropdownMenu1').click(function () {
+                        $(this).next("ul").css("display", 'block').css("z-index","1000");
+                    });
+                    $('#dropdownMenu1+ul').mouseover(function () {
+                        $(this).css("display",'block').css("z-index","1000");
+                    });
+                    $('#dropdownMenu1+ul').mouseout(function () {
+                        $(this).css("display",'none');
+                    });
+                </script>
+            {% else %}
+                <div class="nav navbar-nav navbar-right" >
+                    <li>
+                        <a href="/account/login">
+                            <i class="glyphicon glyphicon-log-in"></i>&nbsp&nbsp登录
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/account/signup">
+                            <i class="glyphicon glyphicon-user"></i>&nbsp&nbsp;注册
+                        </a>
+                    </li>
+                </div>
+            {% endif %}
+
         </div>
     </div>
 
@@ -94,19 +114,21 @@
                         <span>浏览量:{{ article_obj.read_num }}</span>
                         &nbsp;&nbsp;&nbsp;&nbsp;
                         <span>评论数:{{ article_obj.comment_num }}</span>
-                         &nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;
                         <span>点赞数:{{ article_obj.like_num }}</span>
-                         &nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;
                         <span>吐槽数:{{ article_obj.dislike_num }}</span>
-                         &nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;
                     </p>
                 </div>
                 {# 文章标签 #}
                 <div style="margin-bottom: 5px;">
-                   {% for article_of_category in article_obj.category.all %}
-                        <span style="margin-right: 5px;background-color: #FA8EAA;font-family: bold">{{ article_of_category.name }}</span>
-                   {% endfor %}
-                    
+                    {% for article_of_category in article_obj.category.all %}
+                        {% if article_of_category.name not in '草稿,所有文章,无标签文章' %}
+                            <span style="margin-right: 5px;background-color: #FA8EAA;font-family: bold">{{ article_of_category.name }}</span>
+                        {% endif %}
+                    {% endfor %}
+
                 </div>
                 {# 文章摘要 #}
                 <div style="width:690px;
@@ -132,28 +154,81 @@
                     {# 添加评论 #}
                     <div>
                         <div style="margin: 0 auto;width:300px;margin-bottom: 10px;">
-                            <span style="margin: 0 10px;"><a href="javascript:void(0)"><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span></a></span>
-                            <span style="margin: 0 10px;"><a href="javascript:void(0)"><span class="glyphicon glyphicon-hand-down" aria-hidden="true"></span></a></span>
-{#                            <span style="margin: 0 10px;"><button>吐槽</button></span>#}
-                            <span style="margin: 0 10px;"><button class="btn btn-success" id="comment_add1" onclick="showCommentTextArea()">评论</button></span>
+                            <span style="margin: 0 10px;">
+                                <a href="javascript:like({{ article_obj.id }})">
+                                    <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
+                                </a>
+                                <span id="likenum">{{ article_obj.like_num }}喜欢</span>
+                                <span id="like" style="width: 15px;"></span>
+                            </span>
+                            <span style="margin: 0 10px;">
+                                <a href="javascript:dislike({{ article_obj.id }})">
+                                    <span class="glyphicon glyphicon-hand-down" aria-hidden="true"></span>
+                                </a>
+                                <span id="dislikenum">{{ article_obj.dislike_num }}吐槽</span>
+                                <span id="dislike" style="width: 15px;"></span></span>
+                            <span style="margin: 0 10px;">
+                                <button class="btn btn-success" id="comment_add1" onclick="showCommentTextArea()">评论</button>
+                            </span>
                         </div>
                         <script>
+                            function like(article_id) {
+                                $.ajax({
+                                    url:'/comment/comment_add',
+                                    type:'get',
+                                    data:'comment_type=2&article_id='+article_id,
+                                    dataType:'json',
+                                    success:function (data) {
+                                        $('#likenum').text(data.likenum+'喜欢')
+                                        var $like =$('#like')
+                                        if(data.action=="+1"){
+                                            $like.show(1500,function () {
+                                                $like.text(data.action)
+
+                                            })
+                                            $like.hide(1500)
+                                        }
+                                    }
+                                })
+                            }
+                            
+                            function dislike(article_id) {
+                                $.ajax({
+                                    url:'/comment/comment_add',
+                                    type:'get',
+                                    data:'comment_type=3&article_id='+article_id,
+                                    dataType:'json',
+                                    success:function (data) {
+                                        $('#dislikenum').text(data.dislikenum+'吐槽')
+                                        var $dislike =$('#dislike')
+                                        if(data.action=="-1"){
+                                            $dislike.show(1500,function () {
+                                                $dislike.text(data.action)
+                                            })
+                                            $dislike.hide(1500)
+                                        }
+                                    }
+                                })
+                            }
+                            
+                            
                             function showCommentTextArea(){
                                 console.log($(this))
                                 var form='<div id="showCommentTextArea">'
-                                    form+='<form action="/comment/comment_add?article_id={{ article_obj.id }}" method="post" enctype="multipart/form-data">'
-                                    form+='<textarea name="comment_text" class="form-control" rows="3" onclick="" placeholder="我要评论"></textarea>'
-                                    form+='<div style="margin-top: 10px;">'
-                                    form+='<input class="btn btn-default" type="button" value="取消评论" onclick="cancelComment()" style="position: relative;left:480px;margin-right:10px" >'
-                                    form+='<input class="btn btn-success" type="submit" value="提交评论" style="position: relative;left:480px;">'
-                                    form+='</div>'
-                                    form+='</form>'
-                                    form+='</div>'
-                                    $form=$(form)
+                                form+='<form action="/comment/comment_add?article_id={{ article_obj.id }}" method="post" enctype="multipart/form-data">'
+                                form+='<textarea name="comment_text" class="form-control" rows="3" onclick="" placeholder="我要评论"></textarea>'
+                                form+='<div style="margin-top: 10px;">'
+                                form+='<input type="hidden" name="comment_type" value="1">'
+                                form+='<input class="btn btn-default" type="button" value="取消评论" onclick="cancelComment()" style="position: relative;left:480px;margin-right:10px" >'
+                                form+='<input class="btn btn-success" type="submit" value="提交评论" style="position: relative;left:480px;">'
+                                form+='</div>'
+                                form+='</form>'
+                                form+='</div>'
+                                $form=$(form)
                                 console.log($form)
                                 $('#comment_add1').parent().parent().parent().append($form)
                             }
-                            
+
                             function cancelComment() {
                                 $("#showCommentTextArea").remove()
                             }
@@ -173,16 +248,16 @@
                                     {# 只显示评论类型为1的评论 #}
                                     {% if c.retry %}
                                         {# 如果这个评论评论的别人的评论 #}
-                                         <div style="border: 1px solid lightgray;padding: 5px;margin-bottom: 3px;">
-                                             <p><a href="/account/friendInfos?user_id={{ c.account.id }}">{{ c.account.name }}</a>
+                                        <div style="border: 1px solid lightgray;padding: 5px;margin-bottom: 3px;">
+                                            <p><a href="/account/friendInfos?user_id={{ c.account.id }}">{{ c.account.name }}</a>
                                                 <span style="margin-left: 20px;">{{ c.comment_date|date:'Y-m-d' }}</span>
                                                 <span style="margin-left: 20px" id="showCommentRetryTextArea{{ forloop.counter }}"><a href="javascript:showCommentRetryTextArea('showCommentRetryTextArea{{ forloop.counter }}',{{ c.id }})">回复</a></span>
-                                             </p>
-                                             <p>
-                                                 <span style="margin-left: 20px">回复</span>
-                                                 <span style="margin-left: 20px"><a href="/account/friendInfos?user_id={{ c.retry.account.id }}">{{ c.retry.account.name }}</a>:</span>
-                                                 <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ c.comment_text }}</span>
-                                             </p>
+                                            </p>
+                                            <p>
+                                                <span style="margin-left: 20px">回复</span>
+                                                <span style="margin-left: 20px"><a href="/account/friendInfos?user_id={{ c.retry.account.id }}">{{ c.retry.account.name }}</a>:</span>
+                                                <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ c.comment_text }}</span>
+                                            </p>
                                         </div>
 
                                     {% else %}
@@ -200,13 +275,14 @@
                             {% endfor %}
 
                             <script>
-                            function showCommentRetryTextArea(id,comment_id){
-                                //console.log($(this))
-                                var form='<div id="cancle'+id+'">'
-                                //console.log($(this).attr('values'))
+                                function showCommentRetryTextArea(id,comment_id){
+                                    //console.log($(this))
+                                    var form='<div id="cancle'+id+'">'
+                                    //console.log($(this).attr('values'))
                                     form+='<form action="/comment/comment_retry_add?article_id={{ article_obj.id }}&comment_id='+ comment_id +'" method="post" enctype="multipart/form-data">'
                                     form+='<textarea name="comment_text" class="form-control" rows="3" onclick="" placeholder="我要回复"></textarea>'
                                     form+='<div style="margin-top: 10px;">'
+                                    form+='<input type="hidden" name="comment_type" value="1">'
                                     form+='<input class="btn btn-default" type="button" value="取消回复" style="position: relative;left:480px;margin-right:10px" onclick="cancelCommentRetry(\''+ "cancle"+id +'\')">'
                                     form+='<input class="btn btn-success" type="submit" value="提交回复" style="position: relative;left:480px;">'
                                     form+='</div>'
@@ -214,14 +290,14 @@
                                     form+='</div>'
                                     $form=$(form)
 
-                                $("#"+id).parent().parent().append($form)
-                            }
-                            
-                            function cancelCommentRetry(id) {
-                                $('#'+id).remove()
-                            }
+                                    $("#"+id).parent().parent().append($form)
+                                }
 
-                        </script>
+                                function cancelCommentRetry(id) {
+                                    $('#'+id).remove()
+                                }
+
+                            </script>
 
                         </div>
                     </div>

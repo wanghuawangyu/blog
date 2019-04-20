@@ -40,13 +40,11 @@
                 <div>
                     <label for="exampleInputCategory1">文章分组</label>
                     <select multiple name="article_category_id" class="form-control" id="exampleInputCategory1">
-                        {% for category_obj in category_objs %}
-                            {% if category_obj in article_obj.category.all %}
-                                <option value="{{ category_obj.id }}" selected>{{ category_obj.name }}</option>
-                            {% else %}
-                                <option value="{{ category_obj.id }} ">{{ category_obj.name }}</option>
-                            {% endif %}
+
+                        {% for category_obj in category_objs_show %}
+                            <option value="{{ category_obj.id }} ">{{ category_obj.name }}</option>
                         {% endfor %}
+
                     </select>
                     <hr style="margin: 5px 0;">
                 </div>

@@ -25,24 +25,24 @@
         </thead>
         <tbody>
 
+        {% with count=1 %}
+
 
             {% for category in category_objs_slice %}
-                {% for i in artical_counts.1 %}
-                    {% if forloop.parentloop.counter == forloop.counter %}
+                {% if category.name not in '草稿,无标签文章,所有文章' %}
                     <tr>
                         <td align="center">{{forloop.counter}}</td>
                         <td align="center">{{category.name}}</td>
-                        <td align="center">{{i}}</td>
+                        <td align="center">{{category.article_set.count}}</td>
                         <td align="center">{{category.description}}</td>
                         <td align="center">
                         <button type="button" class="btn btn-warning"><a href="/category/category_edit?category_id={{ category.id }}" style="color: white;">修改</a></button>
                         <button type="button" class="btn btn-danger"> <a href="/category/category_dele?category_id={{ category.id }}" style="color: white;">删除</button>
                         </td>
-                    {% endif %}
                     </tr>
-                {% endfor %}
+                {% endif %}
             {% endfor %}
-
+        {% endwith %}
         </tbody>
     </table>
 

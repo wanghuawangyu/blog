@@ -20,4 +20,4 @@ if __name__=='__main__':
     # 4.1 创建Comment数据
     acount_obj=models.Account.objects.get(id=103)
     acticles=acount_obj.category_set.all()
-    # print(acticles)
+    print(acticles)

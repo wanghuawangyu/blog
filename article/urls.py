@@ -6,7 +6,5 @@ urlpatterns=[
     url(r'article_add',views.article_add),
     url(r'article_delete',views.article_delete),
     url(r'article_detail',views.article_detail),
-    # url(r'article_login',views.article_login),
-    # url(r'article_logout',views.article_logout),
     url(r'',views.article_list)
 ]

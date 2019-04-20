@@ -51,15 +51,6 @@ class Comment(models.Model):
     comment_type=models.SmallIntegerField(default=1) #评论类型 1：文本 2：like 3：dislike
     comment_text=models.CharField(max_length=512,default=None,db_index=True) #评论内容
     comment_date=models.DateTimeField(auto_now_add=True) #评论日期事件
-    # coment_retry=models.CharField(max_length=512,default=None,db_index=True) #回复内容
-    # coment_retry_date=models.DateField(auto_now_add=True)# 回复时间
     retry=models.ForeignKey(to='Comment',null=True) #该评论关联的评论
     article=models.ForeignKey(to="Article",null=True) #评论对应的文章id
     account=models.ForeignKey(to="Account",null=True) #评论对应的账户id
-
-# class Comment2Retry(models.Model):
-#     id=models.AutoField(primary_key=True)
-#     from_comment_id=models.ForeignKey(to='Comment')
-#     to_comment_id=models.ForeignKey(to="Comment")
-#     coment_retry_date = models.DateField(auto_now_add=True)  # 回复时间
-
