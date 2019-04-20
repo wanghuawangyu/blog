@@ -54,8 +54,8 @@ class Comment(models.Model):
     # coment_retry=models.CharField(max_length=512,default=None,db_index=True) #回复内容
     # coment_retry_date=models.DateField(auto_now_add=True)# 回复时间
     retry=models.ForeignKey(to='Comment',null=True) #该评论关联的评论
-    article=models.ForeignKey(to="Article") #评论对应的文章id
-    account=models.ForeignKey(to="Account") #评论对应的账户id
+    article=models.ForeignKey(to="Article",null=True) #评论对应的文章id
+    account=models.ForeignKey(to="Account",null=True) #评论对应的账户id
 
 # class Comment2Retry(models.Model):
 #     id=models.AutoField(primary_key=True)
