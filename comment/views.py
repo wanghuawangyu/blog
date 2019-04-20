@@ -42,7 +42,7 @@ def comment_edit(request):
 
 @login_check
 def comment_add(request):
-    print()
+    # print()
     comment_type=1
     comment_text=request.POST.get('comment_text')
     account_id=request.COOKIES.get('uid')
@@ -79,7 +79,7 @@ def comment_retry_add(request):
                                   article_id=article_id,
                                   account_id=account_id
                                   )
-    print(comment_id,article_id,'text',comment_text,account_id)
+    # print(comment_id,article_id,'text',comment_text,account_id)
     return redirect('/article/article_detail?article_id={}'.format(article_id))
 
 
@@ -116,7 +116,7 @@ def comment_retry_me(request):
 
     # 分页处理
     page_html, comment_objs_slice = page_html_create(request, comment_list_new_new, 5, 10)
-    print(page_html,comment_objs_slice)
+    # print(page_html,comment_objs_slice)
     # 获取分组对应文章数量
     artical_counts = article_counts_category(request)
 

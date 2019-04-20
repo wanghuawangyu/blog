@@ -36,7 +36,7 @@ def login(request):
 
             # 得到响应对象
             res = redirect('/account')
-            print('1*' * 10, user.id)
+            # print('1*' * 10, user.id)
             # 设置cookie
             res.set_cookie("isLogin","True",max_age = 60 * 60 * 24 * 345 )
             res.set_cookie("uname",name1,max_age = 60 * 60 * 24 * 345)
@@ -134,7 +134,7 @@ def signup(request):
         for i in range(4):
             res = str(random.randint(0, 9))
             showw += res
-        print('a'*10,'点击注册')
+        # print('a'*10,'点击注册')
         return render(request, 'account/signup.html', {'showw':showw})
 
 #修改个人信息的函数
@@ -238,15 +238,15 @@ def friendInfos(request):
     # 查询id对应的文章,并显示其中的前十条
     art_objs= account_objs.article_set.all().order_by('create_date').reverse()
     art_objs = art_objs[0:10]
-    print(account_objs)
-    print('$'*100)
-    print(art_objs)
+    # print(account_objs)
+    # print('$'*100)
+    # print(art_objs)
     category_objs = account_objs.category_set.all().order_by("orderNo")  # 给侧边栏和网页主体用
-    print(category_objs)
+    # print(category_objs)
 
     # 获取分组对应文章数量
     artical_counts = article_counts_category(request,uid=id)
-    print(artical_counts)
+    # print(artical_counts)
 
 #     print(id)ss
 

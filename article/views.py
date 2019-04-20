@@ -120,13 +120,13 @@ def article_detail(request):
             if article_for_category_count>10:
                 break;
 
-    print('article_category_objs:',article_category_objs)
-    print('article_for_category_list:',article_for_category_list)
-    print('article_for_category_list_new_list:',article_for_category_list_new_list)
-    print('article_for_category_count:',article_for_category_count)
+    # print('article_category_objs:',article_category_objs)
+    # print('article_for_category_list:',article_for_category_list)
+    # print('article_for_category_list_new_list:',article_for_category_list_new_list)
+    # print('article_for_category_count:',article_for_category_count)
 
-    print(article_obj.account_id,type(article_obj.account_id))
-    print(request.COOKIES.get('uid'),type(request.COOKIES.get('uid')))
+    # print(article_obj.account_id,type(article_obj.account_id))
+    # print(request.COOKIES.get('uid'),type(request.COOKIES.get('uid')))
 
     return render(request,"article/article_detail.html",{"category_objs":category_objs,
                                                          "request":request,
@@ -192,11 +192,11 @@ def article_edit(request):
             else:
                 print(False)
 
-        print(category_objs,type(category_objs))
-        print(article_obj.category.all(),type(article_obj.category.all()))
+        # print(category_objs,type(category_objs))
+        # print(article_obj.category.all(),type(article_obj.category.all()))
 
 
-        print('article_id',article_id)
+        # print('article_id',article_id)
         return render(request,"article/article_edit.html",{"category_objs":category_objs,
                                                          "request":request,
                                                          'artical_counts':artical_counts,

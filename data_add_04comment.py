@@ -111,12 +111,12 @@ if __name__=='__main__':
     account_obj_ids=[]
     for obj in account_objs:
         account_obj_ids.append(obj.id)
-    print(account_obj_ids)
+    # print(account_obj_ids)
     artical_obj_ids=[]
 
     for obj in artical_objs:
         artical_obj_ids.append(obj.id)
-    print(artical_obj_ids)
+    # print(artical_obj_ids)
 
     for comment in range(200):
         comment_type=random.randint(1,3)
@@ -125,9 +125,9 @@ if __name__=='__main__':
         obj.account_id=random.choice(account_obj_ids)
         obj.artical_id=random.choice(artical_obj_ids)
         objs.append(obj)
-        print('1-',obj.artical_id)
+        # print('1-',obj.artical_id)
 
-    print(objs)
+    # print(objs)
 
     models.Comment.objects.bulk_create(objs,10)
 
