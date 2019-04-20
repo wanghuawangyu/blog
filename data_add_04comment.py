@@ -116,7 +116,7 @@ if __name__=='__main__':
     for obj in artical_objs:
         artical_obj_ids.append(obj.id)
 
-    for comment in range(20000):
+    for comment in range(200):
         comment_type=random.randint(1,3)
         obj=models.Comment(comment_type=comment_type,
                            comment_text=comment_text if comment_type==1 else random.choice(['like','dislike']),

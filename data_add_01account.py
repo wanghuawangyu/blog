@@ -101,35 +101,37 @@ if __name__=='__main__':
 
     from database import models
 
-    # # # 3.1 创建Article数据
-    models.Article.objects.all().delete() #删除已有数据
-    # 获取Account的ID
+
+    #1.1 创建Account数据
+    chars=['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+    numbers=['1', '2', '3', '4', '5', '6', '7', '8', '9']
+    genders = ['man','woman','unknown'] #性别
+    emails=['@qq.com','@163.com','@189.com','@tarena.cn']
+    hobbys=['basketball','football','video','book','music','photo']
+    objs=[]
+    # models.Account.objects.all().delete() #删除已有账户
+    for i in range(100):
+        #obj=models.Account(name=random.choice(chars)+str(i),
+        obj=models.Account(name='A'+str(i),
+                           password='123456',
+                           gender=random.choice(genders),
+                           email=random.choice(numbers)+random.choice(numbers)+random.choice(numbers)+random.choice(numbers)+random.choice(emails),
+                           hobby=','.join(random.sample(hobbys,random.randint(1,2))),
+                           description='我爱Python',
+                           blog_num=random.randint(0,99)
+        )
+        objs.append(obj)
+    models.Account.objects.bulk_create(objs, 10)  # 一次插入10个，共插入100个账户
+
+    # # 1.2创建Account账户朋友关联关系
     account_obj_ids=[]
     account_objs=models.Account.objects.all()
     for obj in account_objs:
         account_obj_ids.append(obj.id)
-    # 插入文件数据
-    objs=[]
-    for article in range(10000):
-        obj=models.Article(title='996.ICU',
-                           summary=article_summary,
-                           text=artical_text,
-                           read_num=random.randint(0,10000),
-                           comment_num=random.randint(0,100),
-                           like_num=random.randint(0,1000),
-                           dislike_num=random.randint(0,1000)
-                           )
-        obj.account_id=random.choice(account_obj_ids) #为文章插入作者
-        objs.append(obj)
-    models.Article.objects.bulk_create(objs, 10)  # 一次插入10个，共插入100个账户
 
-    # # # 3.2创建Article与分组的关联关系
-    category_obj_ids=[]
-    category_objs=models.Category.objects.all()
-    article_objs=models.Article.objects.all()
-    for obj in category_objs:
-        category_obj_ids.append(obj.id)
-
-    for obj in article_objs:
-        category_ids=random.sample(category_obj_ids,random.randint(0,len(category_obj_ids)))
-        obj.category.set(category_ids)
+    for obj in account_objs:
+        obj_id=obj.id
+        account_obj_ids.remove(obj_id)
+        friend_ids=random.sample(account_obj_ids,random.randint(0,len(account_obj_ids)))
+        obj.friend.set(friend_ids)
+        account_obj_ids.append(obj_id)
