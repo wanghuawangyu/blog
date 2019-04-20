@@ -125,7 +125,7 @@ if __name__=='__main__':
         obj.account_id=random.choice(account_obj_ids)
         obj.artical_id=random.choice(artical_obj_ids)
         objs.append(obj)
-        print('1-',comment)
+        print('1-',obj.artical_id)
 
     print(objs)
 
