@@ -1,35 +1,36 @@
 {% load blog_tags %}
     {% block toc %}{% endblock %}
     <div class="row">
-        <div class="widget">
+        <div class="widget" >
             <h3>推荐博客</h3>
             {% get_popular_articles as popular_articles %}
             {% for article in popular_articles %}
-                <div>
+                <div style="margin:5px 0;">
                     <a href="/article/article_detail?article_id={{article.id }}">{{ article.title }}</a>
                     <div>
-                        <span class="badge" style="color:white;background-color: skyblue">{{ article.comment_num }}</span>
+                        <span class="badge" style="color:white;background-color: skyblue">{{ article.comment_num }}+热评</span>
                     </div>
                 </div>
             {% endfor %}
         </div>
     </div>
-    <hr/>
+    <hr style="position: relative;left: -15px;" />
     <div class="row">
         <div class="widget">
             <h3>最新博客</h3>
             {% get_new_articles as articles_list %}
             {% for article in articles_list %}
-                <div>
-                    <a href="/article/article_detail?article_id={{article.id }}">{{ article.title }}</a>
+                <div style="margin:5px 0;">
+                    <a href="/article/article_detail?article_id={{article.id }}" style="font-size: 14px;">{{ article.title }}</a>
                     <div>
-                        {{ article.account }} 发表于：{{ article.create_date|date:'Y年m月d日' }}
+                        <a href="/account/friendInfos?user_id={{ article.account.id }}" style="font-size: 12px;">{{ article.account.name }}</a> 发表于：{{ article.create_date|date:'Y年m月d日' }}
                     </div>
                 </div>
+{#                <hr style="margin: 0">#}
             {% endfor %}
         </div>
     </div>
-    <hr/>
+    <hr style="position: relative;left: -15px;" />
     <div class="row">
         <div class="widget">
             <h3>标签云</h3>
@@ -41,5 +42,5 @@
             {% endfor %}
         </div>
     </div>
-    <hr/>
+    <hr style="position: relative;left: -15px;" />
 
