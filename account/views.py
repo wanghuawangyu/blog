@@ -20,7 +20,7 @@ def login(request):
         password1=request.POST.get('upwd')
         asdn2=request.POST.get('pid')
         # next_url = request.GET.get("next")
-        print(name1,password1)
+        print(name1,'登陆')
         try:
             user=models.Account.objects.get(name=name1)
 
@@ -31,7 +31,7 @@ def login(request):
 
             # 得到响应对象
             res = redirect('/account')
-            print('1*' * 10, user.id)
+            # print('1*' * 10, user.id)
             # 设置cookie
             res.set_cookie("isLogin","True",max_age = 60 * 60 * 24 * 345 )
             res.set_cookie("uname",name1,max_age = 60 * 60 * 24 * 345)
@@ -135,7 +135,7 @@ def signup(request):
         for i in range(4):
             res = str(random.randint(0, 9))
             showw += res
-        print('a'*10,'点击注册')
+        # print('a'*10,'点击注册')
         return render(request, 'account/signup.html', {'showw':showw})
 
 #修改个人信息的函数

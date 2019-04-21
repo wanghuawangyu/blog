@@ -23,7 +23,7 @@ def article_list(request):
     # 文章按分组筛选
     if not category_id:
         article_objs = models.Article.objects.filter(account_id=uid).all()#.order_by('create_date').reverse()
-        print(article_objs,article_objs.count())
+        # print(article_objs,article_objs.count())
     elif category_obj.name=="所有文章":
         article_objs=models.Article.objects.filter(account_id=uid).order_by('create_date').reverse()
     else:

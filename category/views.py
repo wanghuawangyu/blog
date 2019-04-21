@@ -19,8 +19,8 @@ def category_list(request):
     # print('uid',uid)
     category_objs = models.Category.objects.filter(account_id=uid).order_by("orderNo") #给侧边栏和网页主体用
 
-    print(category_objs)
-    print(request.path_info)
+    # print(category_objs)
+    # print(request.path_info)
 
 
     # 分页处理
@@ -108,7 +108,7 @@ def category_add(request):
 
     # 获取分组对应文章数量
     artical_counts = article_counts_category(request)
-    print(category_objs)
+    # print(category_objs)
     if request.method=='GET':
         return render(request,'category/category_add.html',{"category_objs":category_objs,
                                                             'request': request,

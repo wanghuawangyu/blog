@@ -226,7 +226,7 @@ def friend_apply(request):
 
         # 拒绝
         elif action == '0':
-            print('zoude 0')
+            # print('zoude 0')
             friend_obj = models.Account.objects.get(id=new_id)
             friend_obj.friend.remove(uid)
 

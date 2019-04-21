@@ -22,6 +22,7 @@ def login_check(func):
         isLogin=request.COOKIES.get('isLogin')
         if isLogin == "True":
             # print(uid, uname, isLogin, '***' * 10)
+            print(uname,'正在访问')
             if models.Account.objects.filter(id=uid).exists():
                 account_obj=models.Account.objects.get(id=uid)
             else:

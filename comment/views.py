@@ -95,9 +95,9 @@ def comment_add(request):
         isLike=request.COOKIES.get('isLike',None)
         isdisLike=request.COOKIES.get('isdisLike',None)
         articleid = request.COOKIES.get('articleid', None)
-        print(isdisLike, type(isdisLike),isLike, type(isLike), articleid,type(articleid),article_id)
+        # print(isdisLike, type(isdisLike),isLike, type(isLike), articleid,type(articleid),article_id)
         if isdisLike=='True' and isLike=="False" and articleid==article_id:
-            print('3')
+            # print('3')
             article_obj = models.Article.objects.get(id=article_id)
             dict = {
                 "dislikenum": article_obj.dislike_num,
@@ -188,7 +188,7 @@ def comment_retry_me(request):
 
     # 分页处理
     page_html, comment_objs_slice = page_html_create(request, comment_list_new_new, 5, 10)
-    print(page_html,comment_objs_slice)
+    # print(page_html,comment_objs_slice)
     # 获取分组对应文章数量
     artical_counts = article_counts_category(request)
 
