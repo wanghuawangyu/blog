@@ -62,7 +62,7 @@
                         <p>{{ article.text|truncatechars:128 }}</p>
                     {% endif %}
                     <p>
-                        <span>作者:{{ article.account.name }}</span>
+                        <span>作者:<a href="/account/friendInfos?user_id={{ article.account.id }}">{{ article.account.name }}</a></span>
                         <span>&nbsp;&nbsp;&nbsp;&nbsp;发表时间:{{ article.create_date|date:"Y-m-d" }}</span>
                         <span>&nbsp;&nbsp;&nbsp;&nbsp;浏览量:{{ article.read_num }}</span>
                     </p>
