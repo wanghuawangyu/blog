@@ -20,30 +20,44 @@
         <div style="width: 500px;"></div>
         {#  右侧下拉导航  #}
         <div class="dropdown" style="position: absolute;top: 0;right:0;">
-
-            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                {{request.COOKIES.uname}}
-                <span class="caret" ></span>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" style="position: absolute;z-index: 1;">
-                <li><a href="/account">个人设置</a></li>
-                <li><a href="/friend">好友管理</a></li>
-                <li><a href="/article">文章管理</a></li>
-                <li><a href="/category">分组管理</a></li>
-                <li><a href="/comment">评论管理</a></li>
-            </ul>
-            <button class="btn btn-default"><a href="/account/logout">退出登陆</a></button>
-            <script>
-                $('#dropdownMenu1').click(function () {
-                    $(this).next("ul").css("display", 'block').css("z-index","1000");
-                });
-                $('#dropdownMenu1+ul').mouseover(function () {
-                    $(this).css("display",'block').css("z-index","1000");
-                });
-                $('#dropdownMenu1+ul').mouseout(function () {
-                    $(this).css("display",'none');
-                });
-            </script>
+            {% if request.COOKIES.isLogin == "True" %}
+                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    {{request.COOKIES.uname}}
+                    <span class="caret" ></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" style="position: absolute;z-index: 1;">
+                    <li><a href="/account">个人设置</a></li>
+                    <li><a href="/friend">好友管理</a></li>
+                    <li><a href="/article">文章管理</a></li>
+                    <li><a href="/category">分组管理</a></li>
+                    <li><a href="/comment">评论管理</a></li>
+                </ul>
+                <button class="btn btn-default"><a href="/account/logout">退出登陆</a></button>
+                <script>
+                    $('#dropdownMenu1').click(function () {
+                        $(this).next("ul").css("display", 'block').css("z-index","1000");
+                    });
+                    $('#dropdownMenu1+ul').mouseover(function () {
+                        $(this).css("display",'block').css("z-index","1000");
+                    });
+                    $('#dropdownMenu1+ul').mouseout(function () {
+                        $(this).css("display",'none');
+                    });
+                </script>
+            {% else %}
+                <div class="nav navbar-nav navbar-right" >
+                    <li>
+                        <a href="/account/login">
+                            <i class="glyphicon glyphicon-log-in"></i>&nbsp&nbsp登录
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/account/signup">
+                            <i class="glyphicon glyphicon-user"></i>&nbsp&nbsp;注册
+                        </a>
+                    </li>
+                </div>
+            {% endif %}
         </div>
 
         {#  路径栏   #}
