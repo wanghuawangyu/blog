@@ -63,9 +63,15 @@
         {#  路径栏   #}
         <div style="height: 40px;position:relative;"> {# z-index:-1 #}
             <ol class="breadcrumb">
+                {% if request.COOKIES.isLogin == "True" %}
                 <li>
                     <a href="/account">返回个人中心</a>
                 </li>
+                {% else %}
+                  <li>
+                    <a href="/">返回首页</a>
+                </li>
+                {% endif %}
             </ol>
         </div>
     </div>
